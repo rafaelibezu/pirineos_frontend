@@ -1,0 +1,12 @@
+<ion-item>
+  <ion-label position="stacked">{{ label() }}</ion-label>
+  <ion-input
+    type="number"
+    inputmode="decimal"
+    [placeholder]="placeholder()"
+    [value]="value"
+    [disabled]="disabled"
+    (ionInput)="handleInput($event)"
+    (ionBlur)="handleBlur()"
+  ></ion-input>
+</ion-item>

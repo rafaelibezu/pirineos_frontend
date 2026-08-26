@@ -1,0 +1,19 @@
+.payment-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+h3,
+p {
+  margin: 0;
+}
+
+p {
+  color: #64748b;
+}

@@ -1,0 +1,14 @@
+<section class="totals">
+  <div>
+    <span>Esperado</span>
+    <strong>{{ expected() | currencyEur }}</strong>
+  </div>
+  <div>
+    <span>Contado</span>
+    <strong>{{ counted() | currencyEur }}</strong>
+  </div>
+  <div>
+    <span>Diferencia</span>
+    <strong>{{ difference() | currencyEur }}</strong>
+  </div>
+</section>

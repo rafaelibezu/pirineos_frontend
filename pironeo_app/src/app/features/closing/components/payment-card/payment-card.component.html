@@ -1,0 +1,7 @@
+<article class="payment-card">
+  <div>
+    <h3>{{ method() }}</h3>
+    <p>{{ amount() | currencyEur }}</p>
+  </div>
+  <app-status-badge [label]="status()"></app-status-badge>
+</article>

@@ -1,0 +1,14 @@
+<ion-content class="ion-padding">
+  <form class="login-form" (ngSubmit)="login()">
+    <h1>Iniciar sesion</h1>
+    <ion-item>
+      <ion-label position="stacked">Correo</ion-label>
+      <ion-input type="email" autocomplete="email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Clave</ion-label>
+      <ion-input type="password" autocomplete="current-password"></ion-input>
+    </ion-item>
+    <ion-button type="submit" expand="block">Entrar</ion-button>
+  </form>
+</ion-content>

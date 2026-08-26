@@ -1,0 +1,16 @@
+<ion-content class="ion-padding">
+  <form class="payment-form">
+    <h1>Agregar pago</h1>
+    <ion-item>
+      <ion-label position="stacked">Metodo</ion-label>
+      <ion-select placeholder="Seleccionar">
+        <ion-select-option value="cash">Efectivo</ion-select-option>
+        <ion-select-option value="card">Tarjeta</ion-select-option>
+        <ion-select-option value="transfer">Transferencia</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <app-money-input label="Importe"></app-money-input>
+    <app-image-uploader (imageSelected)="setReceipt($event)"></app-image-uploader>
+    <ion-button type="submit" expand="block">Guardar pago</ion-button>
+  </form>
+</ion-content>
