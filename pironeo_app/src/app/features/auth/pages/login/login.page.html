@@ -1,14 +1,401 @@
-<ion-content class="ion-padding">
-  <form class="login-form" (ngSubmit)="login()">
-    <h1>Iniciar sesion</h1>
-    <ion-item>
-      <ion-label position="stacked">Correo</ion-label>
-      <ion-input type="email" autocomplete="email"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Clave</ion-label>
-      <ion-input type="password" autocomplete="current-password"></ion-input>
-    </ion-item>
-    <ion-button type="submit" expand="block">Entrar</ion-button>
-  </form>
+<ion-content [fullscreen]="true">
+
+  <div
+    class="min-h-screen bg-[#080a0d] text-white flex items-center justify-center px-5 py-8"
+  >
+
+    <div class="w-full max-w-md">
+
+      <!-- LOGO Y NOMBRE -->
+      <div class="text-center mb-8">
+
+        <!-- Logo -->
+        <div class="flex justify-center mb-5">
+
+          <div class="flex justify-center mb-5">
+  <img
+    src="assets/icon/pirineos_logo.png"
+    alt="Lounge Los Pirineos"
+    class="w-35 h-35 object-contain mix-blend-screen"
+  />
+</div>
+
+        </div>
+
+        <!-- Nombre -->
+        <h1 class="text-3xl font-bold tracking-tight text-center">
+          Lounge Los Pirineos
+        </h1>
+
+        <p class="text-gray-400 text-lg mt-1">
+          Control de caja
+        </p>
+
+      </div>
+
+
+      <!-- BIENVENIDA -->
+      <div class="text-center mb-7">
+
+        <h2
+          class="text-3xl font-bold text-[#38d9c5] mb-2"
+        >
+          Bienvenido
+        </h2>
+
+        <p class="text-gray-400 text-base">
+          Accede con tu usuario para continuar
+        </p>
+
+      </div>
+
+
+      <!-- CARD LOGIN -->
+      <div
+        class="bg-[#101216] border border-[#292c32] rounded-2xl p-7 shadow-2xl"
+      >
+
+        <form
+          (ngSubmit)="login()"
+          #loginForm="ngForm"
+        >
+
+          <!-- USUARIO -->
+          <div class="mb-6">
+
+            <label
+              for="username"
+              class="block text-gray-200 text-base font-medium mb-2"
+            >
+              Usuario
+            </label>
+
+            <div class="relative">
+
+              <!-- Icono usuario -->
+              <div
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              >
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-7 h-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0"
+                  />
+                </svg>
+
+              </div>
+
+              <input
+                id="username"
+                name="username"
+                type="text"
+                [(ngModel)]="username"
+                placeholder="Ingresa tu usuario"
+                autocomplete="username"
+                required
+                class="w-full h-16 bg-[#111317] border border-[#30343a] rounded-2xl pl-14 pr-4 text-white text-lg outline-none transition-all placeholder:text-gray-500 focus:border-[#35d4c0] focus:ring-1 focus:ring-[#35d4c0]"
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTRASEÑA -->
+          <div class="mb-5">
+
+            <label
+              for="password"
+              class="block text-gray-200 text-base font-medium mb-2"
+            >
+              Contraseña
+            </label>
+
+            <div class="relative">
+
+              <!-- Icono candado -->
+              <div
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              >
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-7 h-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <rect
+                    width="13"
+                    height="10"
+                    x="5.5"
+                    y="10"
+                    rx="2"
+                  />
+
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 10V7a4 4 0 018 0v3"
+                  />
+
+                </svg>
+
+              </div>
+
+
+              <input
+                id="password"
+                name="password"
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="password"
+                placeholder="Ingresa tu contraseña"
+                autocomplete="current-password"
+                required
+                class="w-full h-16 bg-[#111317] border border-[#30343a] rounded-2xl pl-14 pr-14 text-white text-lg outline-none transition-all placeholder:text-gray-500 focus:border-[#35d4c0] focus:ring-1 focus:ring-[#35d4c0]"
+              />
+
+
+              <!-- MOSTRAR / OCULTAR -->
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#35d4c0] transition-colors"
+                aria-label="Mostrar contraseña"
+              >
+
+                @if (showPassword) {
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                    />
+                  </svg>
+
+                } @else {
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-7 h-7"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 3l18 18"
+                    />
+
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M10.58 10.58a2 2 0 002.83 2.83"
+                    />
+
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9.88 5.09A9.9 9.9 0 0112 5c4.48 0 8.27 2.94 9.54 7a10.3 10.3 0 01-3.06 4.58M6.61 6.61A10.3 10.3 0 002.46 12c1.27 4.06 5.06 7 9.54 7 1.25 0 2.45-.23 3.54-.65"
+                    />
+                  </svg>
+
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- RECORDAR + RECUPERAR -->
+          <div
+            class="flex items-center justify-between gap-3 mb-7"
+          >
+
+            <!-- Checkbox -->
+            <label
+              class="flex items-center gap-3 cursor-pointer select-none"
+            >
+
+              <input
+                type="checkbox"
+                name="rememberMe"
+                [(ngModel)]="rememberMe"
+                class="peer sr-only"
+              />
+
+              <span
+                class="w-7 h-7 rounded-md border border-[#454950] bg-[#111317] flex items-center justify-center peer-checked:bg-[#35d4c0] peer-checked:border-[#35d4c0] transition-all"
+              >
+
+                @if (rememberMe) {
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 text-[#07100e]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M5 12l4 4L19 6"
+                    />
+                  </svg>
+
+                }
+
+              </span>
+
+              <span class="text-gray-300 text-base">
+                Recordarme
+              </span>
+
+            </label>
+
+
+            <!-- Olvidaste contraseña -->
+            <button
+              type="button"
+              (click)="forgotPassword()"
+              class="text-[#35d4c0] text-sm font-medium hover:text-[#65e5d5] transition-colors text-right"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+
+          </div>
+
+
+          <!-- BOTÓN LOGIN -->
+          <button
+            type="submit"
+            [disabled]="loginForm.invalid"
+            class="w-full h-16 rounded-2xl bg-gradient-to-r from-[#2fcfbd] to-[#3ed7c5] text-[#07100e] text-lg font-semibold flex items-center justify-center gap-3 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#35d4c0]/10"
+          >
+
+            <!-- Icono login -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"
+              />
+
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10 17l5-5-5-5"
+              />
+
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 12H3"
+              />
+            </svg>
+
+            Iniciar sesión
+
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- SEGURIDAD -->
+      <div
+        class="flex items-center justify-center gap-4 mt-8 px-6"
+      >
+
+        <div class="text-[#35d4c0]">
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-14 h-14"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"
+            />
+
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4"
+            />
+
+          </svg>
+
+        </div>
+
+        <p class="text-gray-400 text-base leading-6">
+          Acceso interno para<br />
+          personal autorizado
+        </p>
+
+      </div>
+
+
+      <!-- LINEA -->
+      <div
+        class="border-t border-[#202328] mt-8"
+      ></div>
+
+
+      <!-- VERSION -->
+      <div class="text-center mt-6">
+
+        <span class="text-gray-500 text-sm">
+          v1.0.0
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </ion-content>
