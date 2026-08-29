@@ -8,5 +8,5 @@ export interface LoginResponse {
   firstName: string;
   lastName?: string;
 
-  role: 'ADMIN' | 'WAITER';
+  role: 'ADMIN' | 'WAITER' | 'ROLE_ADMIN' | 'ROLE_WAITER' | string;
 }

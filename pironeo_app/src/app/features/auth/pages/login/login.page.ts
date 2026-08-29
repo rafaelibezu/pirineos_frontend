@@ -132,9 +132,15 @@ export class LoginPage {
         next: response => {
 
           const role =
-            response.data.role;
+            this.authService.getCurrentSession()?.role
+            ?? response.data.role;
 
-          if (role === 'ADMIN') {
+          if (
+            role
+              .trim()
+              .toUpperCase()
+              .replace('ROLE_', '') === 'ADMIN'
+          ) {
 
             this.router.navigateByUrl(
               '/dashboard/admin',

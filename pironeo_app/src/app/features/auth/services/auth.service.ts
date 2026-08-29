@@ -27,6 +27,7 @@ import {
 } from '../../../core/models/api-response.model';
 
 import {
+  UserRole,
   UserSession
 } from '../../../core/models/user-session.model';
 
@@ -108,7 +109,9 @@ export class AuthService {
               loginData.lastName,
 
             role:
-              loginData.role,
+              this.normalizeRole(
+                loginData.role
+              ),
 
             accessToken:
               loginData.accessToken,
@@ -167,6 +170,21 @@ export class AuthService {
   ): boolean {
 
     return this.sessionSignal()?.role === role;
+  }
+
+  private normalizeRole(
+    role: string
+  ): UserRole {
+
+    const normalizedRole =
+      role
+        .trim()
+        .toUpperCase()
+        .replace('ROLE_', '');
+
+    return normalizedRole === 'ADMIN'
+      ? 'ADMIN'
+      : 'WAITER';
   }
 
   private saveSession(

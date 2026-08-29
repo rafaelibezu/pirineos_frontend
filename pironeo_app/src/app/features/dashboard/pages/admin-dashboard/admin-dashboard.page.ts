@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { IonButton, IonContent, IonSpinner } from '@ionic/angular';
 import { finalize } from 'rxjs';
 
-import { AdminDashboardModel } from '../../models/admin-dashboard.model';
+import { AdminDashboard } from '../../models/admin-dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
@@ -22,7 +22,7 @@ import { DashboardService } from '../../services/dashboard.service';
 })
 export class AdminDashboardPage implements OnInit {
 
-  dashboard: AdminDashboardModel | null = null;
+  dashboard: AdminDashboard | null = null;
 
   loading = false;
 
@@ -42,7 +42,10 @@ export class AdminDashboardPage implements OnInit {
     this.errorMessage = '';
 
     this.dashboardService
-      .getAdminDashboard()
+      .getAdminDashboard(
+        this.getToday(),
+        this.getToday()
+      )
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -58,5 +61,12 @@ export class AdminDashboardPage implements OnInit {
             ?? 'No se pudo cargar el dashboard';
         }
       });
+  }
+
+  private getToday(): string {
+
+    return new Date()
+      .toISOString()
+      .slice(0, 10);
   }
 }

@@ -1,0 +1,190 @@
+<ion-content [fullscreen]="true">
+
+  <div class="detail-shell">
+
+    <header class="detail-header">
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()"
+      >
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+
+      <div>
+        <span>Dashboard</span>
+        <h1>{{ sectionTitle() }}</h1>
+      </div>
+    </header>
+
+    @if (loading()) {
+
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>Cargando detalle...</span>
+      </div>
+
+    } @else if (error()) {
+
+      <div class="error-state">
+        <p>{{ error() }}</p>
+        <button
+          type="button"
+          (click)="loadDashboard()"
+        >
+          Reintentar
+        </button>
+      </div>
+
+    } @else if (dashboard(); as data) {
+
+      <nav class="section-tabs">
+        <button
+          type="button"
+          [class.active]="activeSection() === 'differences'"
+          (click)="setSection('differences')"
+        >
+          Descuadres
+        </button>
+        <button
+          type="button"
+          [class.active]="activeSection() === 'movements'"
+          (click)="setSection('movements')"
+        >
+          Movimientos
+        </button>
+        <button
+          type="button"
+          [class.active]="activeSection() === 'closings'"
+          (click)="setSection('closings')"
+        >
+          Cierres
+        </button>
+        <button
+          type="button"
+          [class.active]="activeSection() === 'transfers'"
+          (click)="setSection('transfers')"
+        >
+          Traspasos
+        </button>
+      </nav>
+
+      @if (activeSection() === 'differences') {
+
+        <section class="detail-panel">
+          <article class="difference-total">
+            <span>Descuadre total</span>
+            <strong>{{ data.summary.totalDifference | currency:'EUR':'symbol':'1.2-2' }}</strong>
+          </article>
+
+          <div class="difference-list">
+            <article>
+              <ion-icon name="cash-outline"></ion-icon>
+              <div>
+                <span>Efectivo</span>
+                <strong>{{ data.summary.cashDifference | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+            </article>
+
+            <article>
+              <ion-icon name="card-outline"></ion-icon>
+              <div>
+                <span>TPV / Visas</span>
+                <strong>{{ data.summary.posDifference | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+            </article>
+          </div>
+        </section>
+
+      } @else if (activeSection() === 'movements') {
+
+        <section class="detail-panel list-panel">
+          @for (movement of data.recentMovements; track trackMovement($index, movement)) {
+            <article class="list-row">
+              <ion-icon
+                [name]="movement.movementType === 'PAYMENT' ? 'cash-outline' : 'card-outline'"
+              ></ion-icon>
+              <div>
+                <strong>{{ movement.concept }}</strong>
+                <span>{{ movement.accountName }} · {{ movement.shiftName }}</span>
+                <small *ngIf="movement.beneficiary">
+                  {{ movement.beneficiary }}
+                </small>
+              </div>
+              <aside>
+                <strong [class.outgoing]="movement.movementType === 'PAYMENT'">
+                  {{ movement.movementType === 'PAYMENT' ? '-' : '+' }}
+                  {{ movement.amount | currency:'EUR':'symbol':'1.2-2' }}
+                </strong>
+                <span>{{ movement.movementAt | date:'dd/MM HH:mm' }}</span>
+              </aside>
+            </article>
+          } @empty {
+            <p class="empty-text">No hay movimientos para mostrar.</p>
+          }
+        </section>
+
+      } @else if (activeSection() === 'closings') {
+
+        <section class="detail-panel list-panel">
+          @for (closing of allClosings(); track trackClosing($index, closing)) {
+            <article class="closing-row">
+              <div class="closing-title">
+                <ion-icon name="clipboard-outline"></ion-icon>
+                <div>
+                  <strong>{{ closing.cashRegisterName }}</strong>
+                  <span>{{ closing.shiftName }} · {{ closing.closingAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <em [class.finalized]="closing.status === 'FINALIZED'">
+                  {{ closing.status === 'DRAFT' ? 'Pendiente' : 'Finalizado' }}
+                </em>
+              </div>
+
+              <div class="closing-grid">
+                <span>Cierre Z <strong>{{ closing.zClosing | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Manual <strong>{{ closing.manualAmount | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Visas <strong>{{ closing.declaredVisa | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Pagos <strong>{{ closing.totalPayments | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Efectivo <strong>{{ closing.cashTotal | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>TPV real <strong>{{ closing.realPos | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Desc. efectivo <strong>{{ closing.cashDifference | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+                <span>Desc. total <strong>{{ closing.totalDifference | currency:'EUR':'symbol':'1.2-2' }}</strong></span>
+              </div>
+            </article>
+          } @empty {
+            <p class="empty-text">No hay cierres para mostrar.</p>
+          }
+        </section>
+
+      } @else {
+
+        <section class="detail-panel list-panel">
+          @for (transfer of data.recentTransfers; track trackTransfer($index, transfer)) {
+            <article class="list-row">
+              <ion-icon name="swap-horizontal-outline"></ion-icon>
+              <div>
+                <strong>
+                  {{ transfer.sourceCashRegisterName }} a {{ transfer.destinationCashRegisterName }}
+                </strong>
+                <span>{{ transfer.shiftName }}</span>
+                <small *ngIf="transfer.reason">
+                  {{ transfer.reason }}
+                </small>
+              </div>
+              <aside>
+                <strong>{{ transfer.amount | currency:'EUR':'symbol':'1.2-2' }}</strong>
+                <span>{{ transfer.transferAt | date:'dd/MM HH:mm' }}</span>
+              </aside>
+            </article>
+          } @empty {
+            <p class="empty-text">No hay traspasos recientes.</p>
+          }
+        </section>
+
+      }
+
+    }
+
+  </div>
+
+</ion-content>

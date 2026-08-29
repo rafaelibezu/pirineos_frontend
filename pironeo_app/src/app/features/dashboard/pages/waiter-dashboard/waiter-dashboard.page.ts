@@ -1,62 +1,204 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonSpinner } from '@ionic/angular';
-import { finalize } from 'rxjs';
+import {
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
+import { Router } from '@angular/router';
+import {
+  IonContent,
+  IonIcon,
+  IonSpinner
+} from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import {
+  addCircleOutline,
+  alarmOutline,
+  briefcaseOutline,
+  cardOutline,
+  cashOutline,
+  checkmarkOutline,
+  chevronDownOutline,
+  chevronForwardOutline,
+  clipboardOutline,
+  documentTextOutline,
+  homeOutline,
+  listOutline,
+  notificationsOutline,
+  personCircleOutline,
+  scaleOutline,
+  sunnyOutline,
+  swapHorizontalOutline,
+  timeOutline,
+  trendingUpOutline
+} from 'ionicons/icons';
 
-import { WaiterDashboardModel } from '../../models/waiter-dashboard.model';
+import {
+  WaiterClosing,
+  WaiterDashboard,
+  WaiterMovement
+} from '../../models/waiter-dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-waiter-dashboard',
   standalone: true,
+  templateUrl: './waiter-dashboard.page.html',
+  styleUrls: ['./waiter-dashboard.page.scss'],
   imports: [
     CommonModule,
-    IonButton,
     IonContent,
-    IonSpinner,
-    RouterLink
-  ],
-  templateUrl: './waiter-dashboard.page.html',
-  styleUrl: './waiter-dashboard.page.scss'
+    IonIcon,
+    IonSpinner
+  ]
 })
 export class WaiterDashboardPage implements OnInit {
 
-  dashboard: WaiterDashboardModel | null = null;
+  private readonly dashboardService =
+    inject(DashboardService);
 
-  loading = false;
+  private readonly router =
+    inject(Router);
 
-  errorMessage = '';
+  readonly loading =
+    signal(true);
 
-  constructor(
-    private readonly dashboardService: DashboardService
-  ) {}
+  readonly error =
+    signal('');
+
+  readonly dashboard =
+    signal<WaiterDashboard | null>(null);
+
+  readonly firstName =
+    computed(() => {
+      const name =
+        this.dashboard()?.waiterName ?? '';
+
+      return name.split(' ')[0] || '';
+    });
+
+  readonly latestClosing =
+    computed<WaiterClosing | null>(() => {
+      const closings =
+        this.dashboard()?.todayClosings ?? [];
+
+      return closings.find(closing => closing.status === 'DRAFT')
+        ?? closings[0]
+        ?? null;
+    });
+
+  readonly lastMovementAt =
+    computed(() =>
+      this.dashboard()?.recentMovements[0]?.movementAt
+      ?? this.latestClosing()?.closingAt
+      ?? null
+    );
+
+  readonly manualPercent =
+    computed(() => this.getPercent(
+      this.dashboard()?.summary.totalManual ?? 0,
+      this.dashboard()?.summary.totalSales ?? 0
+    ));
+
+  readonly visaPercent =
+    computed(() => this.getPercent(
+      this.latestClosing()?.declaredVisa ?? 0,
+      this.dashboard()?.summary.totalSales ?? 0
+    ));
+
+  constructor() {
+    addIcons({
+      addCircleOutline,
+      alarmOutline,
+      briefcaseOutline,
+      cardOutline,
+      cashOutline,
+      checkmarkOutline,
+      chevronDownOutline,
+      chevronForwardOutline,
+      clipboardOutline,
+      documentTextOutline,
+      homeOutline,
+      listOutline,
+      notificationsOutline,
+      personCircleOutline,
+      scaleOutline,
+      sunnyOutline,
+      swapHorizontalOutline,
+      timeOutline,
+      trendingUpOutline
+    });
+  }
 
   ngOnInit(): void {
     this.loadDashboard();
   }
 
   loadDashboard(): void {
-
-    this.loading = true;
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.error.set('');
 
     this.dashboardService
       .getWaiterDashboard()
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-        })
-      )
       .subscribe({
         next: response => {
-          this.dashboard = response.data;
+          this.dashboard.set(response.data);
+          this.loading.set(false);
         },
         error: error => {
-          this.errorMessage =
+          this.error.set(
             error?.error?.message
-            ?? 'No se pudo cargar el dashboard';
+            ?? 'No se pudo cargar el dashboard'
+          );
+          this.loading.set(false);
         }
       });
+  }
+
+  goToClosing(): void {
+    this.router.navigateByUrl('/closing');
+  }
+
+  goToPayments(): void {
+    this.router.navigateByUrl('/payments/add-payment');
+  }
+
+  goToTransfers(): void {
+    this.router.navigateByUrl('/dashboard/waiter');
+  }
+
+  goToHistory(): void {
+    this.goToDetail('closings');
+  }
+
+  goToDetail(section: 'differences' | 'movements' | 'closings' | 'transfers'): void {
+    this.router.navigate(
+      ['/dashboard/waiter/detail'],
+      {
+        queryParams: {
+          section
+        }
+      }
+    );
+  }
+
+  trackMovement(
+    _index: number,
+    movement: WaiterMovement
+  ): number {
+    return movement.movementId;
+  }
+
+  private getPercent(
+    value: number,
+    total: number
+  ): number {
+    if (total <= 0) {
+      return 0;
+    }
+
+    return value * 100 / total;
   }
 }

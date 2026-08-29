@@ -34,22 +34,22 @@
 
         <article class="summary-card">
           <span>Ventas</span>
-          <strong>S/ {{ dashboard.totalSales | number: '1.2-2' }}</strong>
+          <strong>S/ {{ dashboard.summary.totalSales | number: '1.2-2' }}</strong>
         </article>
 
         <article class="summary-card">
           <span>Cierres</span>
-          <strong>{{ dashboard.totalClosings }}</strong>
+          <strong>{{ dashboard.summary.totalClosings }}</strong>
         </article>
 
         <article class="summary-card">
-          <span>Pendientes</span>
-          <strong>{{ dashboard.pendingClosings }}</strong>
+          <span>Pagos</span>
+          <strong>S/ {{ dashboard.summary.totalDistributorPayments | number: '1.2-2' }}</strong>
         </article>
 
         <article class="summary-card">
-          <span>Mozos activos</span>
-          <strong>{{ dashboard.activeWaiters }}</strong>
+          <span>Descuadre</span>
+          <strong>S/ {{ dashboard.summary.totalDifference | number: '1.2-2' }}</strong>
         </article>
 
       </div>

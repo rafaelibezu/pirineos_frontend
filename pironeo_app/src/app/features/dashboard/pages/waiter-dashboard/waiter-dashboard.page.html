@@ -1,74 +1,376 @@
 <ion-content [fullscreen]="true">
 
-  <section class="dashboard-page">
+  <div class="waiter-shell">
 
-    <header class="dashboard-header">
-      <p>Mozo</p>
-      <h1>Dashboard</h1>
-    </header>
+    @if (loading()) {
 
-    <div
-      class="loading-state"
-      *ngIf="loading"
-    >
-      <ion-spinner name="crescent"></ion-spinner>
-    </div>
-
-    <div
-      class="error-state"
-      *ngIf="errorMessage && !loading"
-    >
-      <p>{{ errorMessage }}</p>
-      <ion-button
-        fill="clear"
-        size="small"
-        (click)="loadDashboard()"
-      >
-        Reintentar
-      </ion-button>
-    </div>
-
-    <ng-container *ngIf="dashboard && !loading">
-
-      <div class="summary-grid">
-
-        <article class="summary-card">
-          <span>Ventas de hoy</span>
-          <strong>S/ {{ dashboard.todaySales | number: '1.2-2' }}</strong>
-        </article>
-
-        <article class="summary-card">
-          <span>Pagos de hoy</span>
-          <strong>{{ dashboard.todayPayments }}</strong>
-        </article>
-
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>Cargando tu jornada...</span>
       </div>
 
-      <article class="status-card">
-        <span>Estado de cierre</span>
-        <strong>
-          {{ dashboard.pendingClosing ? 'Pendiente' : 'Al día' }}
-        </strong>
-        <p *ngIf="dashboard.lastClosingDate">
-          Último cierre: {{ dashboard.lastClosingDate }}
-        </p>
-      </article>
+    } @else if (error()) {
 
-      <div class="actions">
-        <ion-button routerLink="/payments/add-payment">
-          Registrar pago
-        </ion-button>
-
-        <ion-button
-          fill="outline"
-          routerLink="/closing"
+      <div class="error-state">
+        <ion-icon name="alarm-outline"></ion-icon>
+        <p>{{ error() }}</p>
+        <button
+          type="button"
+          (click)="loadDashboard()"
         >
-          Nuevo cierre
-        </ion-button>
+          Reintentar
+        </button>
       </div>
 
-    </ng-container>
+    } @else if (dashboard(); as data) {
 
-  </section>
+      <header class="topbar">
+
+        <div class="brand-row">
+
+          <div class="brand">
+            <img
+              src="assets/icon/pirineos_logo.png"
+              alt="Lounge Los Pirineos"
+            />
+            <div>
+              <strong>LOUNGE</strong>
+              <span>LOS PIRINEOS</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="notification-button"
+            aria-label="Notificaciones"
+          >
+            <ion-icon name="notifications-outline"></ion-icon>
+            <span></span>
+          </button>
+
+        </div>
+
+        <div class="welcome-row">
+
+          <div class="user-block">
+            <div class="avatar">
+              {{ firstName().charAt(0) }}
+            </div>
+
+            <div>
+              <h1>Hola, {{ firstName() }}</h1>
+              <p>¿Lista para un gran servicio?</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="shift-pill"
+          >
+            <ion-icon name="sunny-outline"></ion-icon>
+            <span>
+              Turno {{ latestClosing()?.shiftName || 'mañana' }}
+            </span>
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </button>
+
+        </div>
+
+      </header>
+
+      <main class="content-stack">
+
+        <section class="summary-grid">
+
+          <article class="metric-card green">
+            <div class="metric-icon">
+              <ion-icon name="trending-up-outline"></ion-icon>
+            </div>
+            <span>Mi venta de hoy</span>
+            <strong>{{ data.summary.totalSales | currency:'EUR':'symbol':'1.2-2' }}</strong>
+            <small>Hoy</small>
+          </article>
+
+          <article class="metric-card cyan">
+            <div class="metric-icon">
+              <ion-icon name="document-text-outline"></ion-icon>
+            </div>
+            <span>Manual</span>
+            <strong>{{ data.summary.totalManual | currency:'EUR':'symbol':'1.2-2' }}</strong>
+            <small>{{ manualPercent() | number:'1.1-1' }}% del total</small>
+          </article>
+
+          <article class="metric-card purple">
+            <div class="metric-icon">
+              <ion-icon name="card-outline"></ion-icon>
+            </div>
+            <span>TPV / Visas</span>
+            <strong>{{ (latestClosing()?.declaredVisa ?? 0) | currency:'EUR':'symbol':'1.2-2' }}</strong>
+            <small>{{ visaPercent() | number:'1.1-1' }}% del total</small>
+          </article>
+
+          <article class="metric-card gold">
+            <div class="metric-icon">
+              <ion-icon name="briefcase-outline"></ion-icon>
+            </div>
+            <span>Pagos registrados</span>
+            <strong>{{ data.summary.totalPayments | currency:'EUR':'symbol':'1.2-2' }}</strong>
+            <small>Hoy</small>
+          </article>
+
+        </section>
+
+        <section class="panel closing-panel">
+
+          <div class="panel-header">
+            <div class="panel-title">
+              <ion-icon name="clipboard-outline"></ion-icon>
+              <h2>Mi cierre de hoy</h2>
+            </div>
+
+            <span
+              class="status-pill"
+              [class.pending]="data.summary.hasPendingClosing"
+            >
+              <ion-icon name="time-outline"></ion-icon>
+              {{ data.summary.hasPendingClosing ? 'Pendiente' : 'Finalizado' }}
+            </span>
+          </div>
+
+          @if (latestClosing(); as closing) {
+
+            <div class="closing-values">
+              <div>
+                <span>Cierre Z</span>
+                <strong>{{ closing.zClosing | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+              <div>
+                <span>Manual</span>
+                <strong>{{ closing.manualAmount | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+              <div>
+                <span>Visas</span>
+                <strong>{{ closing.declaredVisa | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+              <div>
+                <span>Total caja</span>
+                <strong>{{ data.summary.totalSales | currency:'EUR':'symbol':'1.2-2' }}</strong>
+              </div>
+            </div>
+
+            <p class="last-movement">
+              Último movimiento:
+              {{ lastMovementAt() | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+
+          } @else {
+
+            <p class="empty-text">
+              Todavía no tienes un cierre registrado hoy.
+            </p>
+
+          }
+
+        </section>
+
+        <section
+          class="panel difference-panel"
+          (click)="goToDetail('differences')"
+        >
+
+          <div class="panel-header compact">
+            <div class="panel-title">
+              <ion-icon name="scale-outline"></ion-icon>
+              <h2>Descuadres</h2>
+            </div>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+
+          <div class="difference-grid">
+            <article class="difference-card cash">
+              <div class="round-icon">
+                <ion-icon name="cash-outline"></ion-icon>
+              </div>
+              <div>
+                <span>Descuadre efectivo</span>
+                <strong>{{ data.summary.cashDifference | currency:'EUR':'symbol':'1.2-2' }}</strong>
+                <small>
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                  Aceptable
+                </small>
+              </div>
+            </article>
+
+            <article class="difference-card card">
+              <div class="round-icon">
+                <ion-icon name="card-outline"></ion-icon>
+              </div>
+              <div>
+                <span>Descuadre TPV</span>
+                <strong>{{ data.summary.posDifference | currency:'EUR':'symbol':'1.2-2' }}</strong>
+                <small>
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                  Aceptable
+                </small>
+              </div>
+            </article>
+          </div>
+
+        </section>
+
+        <div class="lower-grid">
+
+          <section class="panel movements-panel">
+
+            <div class="panel-header compact">
+              <div class="panel-title">
+                <ion-icon name="list-outline"></ion-icon>
+                <h2>Movimientos recientes</h2>
+              </div>
+              <button
+                type="button"
+                (click)="goToDetail('movements')"
+              >
+                Ver todos
+              </button>
+            </div>
+
+            @for (movement of data.recentMovements.slice(0, 3); track trackMovement($index, movement)) {
+
+              <article class="movement-row">
+                <div
+                  class="movement-icon"
+                  [class.payment]="movement.movementType === 'PAYMENT'"
+                >
+                  <ion-icon
+                    [name]="movement.movementType === 'PAYMENT' ? 'cash-outline' : 'card-outline'"
+                  ></ion-icon>
+                </div>
+
+                <div class="movement-copy">
+                  <strong>{{ movement.concept }}</strong>
+                  <span>{{ movement.accountName }}</span>
+                </div>
+
+                <div class="movement-amount">
+                  <strong [class.outgoing]="movement.movementType === 'PAYMENT'">
+                    {{ movement.movementType === 'PAYMENT' ? '-' : '+' }}
+                    {{ movement.amount | currency:'EUR':'symbol':'1.2-2' }}
+                  </strong>
+                  <span>{{ movement.movementAt | date:'HH:mm' }}</span>
+                </div>
+              </article>
+
+            } @empty {
+
+              <p class="empty-text">Sin movimientos recientes.</p>
+
+            }
+
+            <button
+              type="button"
+              class="see-all"
+              (click)="goToDetail('movements')"
+            >
+              Ver todos los movimientos
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+
+          </section>
+
+          <section
+            class="panel alert-panel"
+            *ngIf="data.summary.hasPendingClosing"
+          >
+            <div class="alert-icon">
+              <ion-icon name="clipboard-outline"></ion-icon>
+            </div>
+            <h2>Tienes un cierre pendiente</h2>
+            <p>Completa tu cierre de turno para cuadrar tu caja.</p>
+            <button
+              type="button"
+              (click)="goToClosing()"
+            >
+              Ir al cierre
+            </button>
+          </section>
+
+        </div>
+
+        <section class="quick-menu">
+          <button
+            type="button"
+            (click)="goToClosing()"
+          >
+            <span class="quick-icon green">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </span>
+            Nuevo cierre
+          </button>
+
+          <button
+            type="button"
+            (click)="goToPayments()"
+          >
+            <span class="quick-icon blue">
+              <ion-icon name="card-outline"></ion-icon>
+            </span>
+            Pagos
+          </button>
+
+          <button
+            type="button"
+            (click)="goToDetail('transfers')"
+          >
+            <span class="quick-icon violet">
+              <ion-icon name="swap-horizontal-outline"></ion-icon>
+            </span>
+            Traspaso
+          </button>
+
+          <button
+            type="button"
+            (click)="goToHistory()"
+          >
+            <span class="quick-icon amber">
+              <ion-icon name="time-outline"></ion-icon>
+            </span>
+            Historial
+          </button>
+        </section>
+
+      </main>
+
+      <nav class="bottom-nav">
+        <button
+          type="button"
+          class="active"
+        >
+          <ion-icon name="home-outline"></ion-icon>
+          <span>Inicio</span>
+        </button>
+        <button
+          type="button"
+          (click)="goToPayments()"
+        >
+          <ion-icon name="card-outline"></ion-icon>
+          <span>Pagos</span>
+        </button>
+        <button
+          type="button"
+          (click)="goToDetail('transfers')"
+        >
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+          <span>Traspasos</span>
+        </button>
+        <button type="button">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Perfil</span>
+        </button>
+      </nav>
+
+    }
+
+  </div>
 
 </ion-content>

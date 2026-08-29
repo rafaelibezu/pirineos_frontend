@@ -15,7 +15,13 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return true;
   }
 
-  return session?.role && allowedRoles.includes(session.role)
+  const role =
+    session?.role
+      ?.trim()
+      .toUpperCase()
+      .replace('ROLE_', '') as UserRole | undefined;
+
+  return role && allowedRoles.includes(role)
     ? true
     : router.createUrlTree(['/auth/login']);
 };
