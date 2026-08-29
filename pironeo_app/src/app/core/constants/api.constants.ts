@@ -1,11 +1,21 @@
 import { environment } from '../../../environments/environment';
 
-export const API_BASE_URL = environment.apiUrl;
+export const API_URL = environment.apiUrl;
 
 export const API_ENDPOINTS = {
-  auth: {
-    login: `${API_BASE_URL}/auth/login`,
-    refresh: `${API_BASE_URL}/auth/refresh`,
-    logout: `${API_BASE_URL}/auth/logout`,
+
+  AUTH: {
+
+    LOGIN: `${API_URL}/auth/login`
+
   },
+
+  DASHBOARD: {
+
+    ADMIN: `${API_URL}/dashboard/admin`,
+
+    WAITER: `${API_URL}/dashboard/waiter`
+
+  }
+
 } as const;

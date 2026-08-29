@@ -1,5 +1,9 @@
 export const STORAGE_KEYS = {
-  accessToken: 'pirineo_access_token',
-  refreshToken: 'pirineo_refresh_token',
-  userSession: 'pirineo_user_session',
+
+  AUTH_TOKEN: 'pirineos_auth_token',
+
+  USER_SESSION: 'pirineos_user_session',
+
+  REMEMBER_ME: 'pirineos_remember_me'
+
 } as const;

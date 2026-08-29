@@ -1,0 +1,67 @@
+<ion-content [fullscreen]="true">
+
+  <section class="dashboard-page">
+
+    <header class="dashboard-header">
+      <p>Administrador</p>
+      <h1>Dashboard</h1>
+    </header>
+
+    <div
+      class="loading-state"
+      *ngIf="loading"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div
+      class="error-state"
+      *ngIf="errorMessage && !loading"
+    >
+      <p>{{ errorMessage }}</p>
+      <ion-button
+        fill="clear"
+        size="small"
+        (click)="loadDashboard()"
+      >
+        Reintentar
+      </ion-button>
+    </div>
+
+    <ng-container *ngIf="dashboard && !loading">
+
+      <div class="summary-grid">
+
+        <article class="summary-card">
+          <span>Ventas</span>
+          <strong>S/ {{ dashboard.totalSales | number: '1.2-2' }}</strong>
+        </article>
+
+        <article class="summary-card">
+          <span>Cierres</span>
+          <strong>{{ dashboard.totalClosings }}</strong>
+        </article>
+
+        <article class="summary-card">
+          <span>Pendientes</span>
+          <strong>{{ dashboard.pendingClosings }}</strong>
+        </article>
+
+        <article class="summary-card">
+          <span>Mozos activos</span>
+          <strong>{{ dashboard.activeWaiters }}</strong>
+        </article>
+
+      </div>
+
+      <div class="actions">
+        <ion-button routerLink="/closing">
+          Ver cierres
+        </ion-button>
+      </div>
+
+    </ng-container>
+
+  </section>
+
+</ion-content>

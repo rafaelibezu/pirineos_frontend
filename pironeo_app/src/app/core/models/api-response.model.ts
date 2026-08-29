@@ -1,6 +1,7 @@
+export type ApiStatus = 'SUCCESS' | 'ERROR';
+
 export interface ApiResponse<T> {
+  status: ApiStatus;
+  message: string;
   data: T;
-  message?: string;
-  success: boolean;
-  errors?: Record<string, string[]>;
 }

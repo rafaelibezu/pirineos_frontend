@@ -1,22 +1,44 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import {
+  HttpInterceptorFn
+} from '@angular/common/http';
 
-import { STORAGE_KEYS } from '../constants/storage.constants';
-import { StorageService } from '../services/storage.service';
+import {
+  inject
+} from '@angular/core';
 
-export const authInterceptor: HttpInterceptorFn = (request, next) => {
-  const storage = inject(StorageService);
-  const token = storage.get<string>(STORAGE_KEYS.accessToken);
+import {
+  AuthService
+} from '../../features/auth/services/auth.service';
+
+export const authInterceptor: HttpInterceptorFn = (
+  request,
+  next
+) => {
+
+  const authService =
+    inject(AuthService);
+
+  const token =
+    authService.getToken();
 
   if (!token) {
+
     return next(request);
   }
 
-  return next(
+  const authenticatedRequest =
     request.clone({
+
       setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    }),
+
+        Authorization:
+          `Bearer ${token}`
+
+      }
+
+    });
+
+  return next(
+    authenticatedRequest
   );
 };

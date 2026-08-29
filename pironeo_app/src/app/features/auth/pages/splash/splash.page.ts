@@ -1,23 +1,32 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonSpinner } from '@ionic/angular';
-
-import { STORAGE_KEYS } from '../../../../core/constants/storage.constants';
-import { StorageService } from '../../../../core/services/storage.service';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-splash',
-  standalone: true,
-  imports: [IonContent, IonSpinner],
   templateUrl: './splash.page.html',
-  styleUrl: './splash.page.scss',
+  styleUrls: ['./splash.page.scss'],
+  standalone: true,
+  imports: [
+    IonContent
+  ]
 })
-export class SplashPage {
-  private readonly router = inject(Router);
-  private readonly storage = inject(StorageService);
+export class SplashPage implements OnInit {
 
-  ionViewDidEnter(): void {
-    const hasSession = Boolean(this.storage.get<string>(STORAGE_KEYS.accessToken));
-    void this.router.navigateByUrl(hasSession ? '/dashboard' : '/auth/login');
+  constructor(
+    private readonly router: Router
+  ) {}
+
+  ngOnInit(): void {
+
+    setTimeout(() => {
+      this.router.navigateByUrl(
+        '/auth/login',
+        {
+          replaceUrl: true
+        }
+      );
+    }, 2000);
+
   }
 }

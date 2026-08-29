@@ -13,7 +13,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        storage.remove(STORAGE_KEYS.accessToken);
+        storage.remove(STORAGE_KEYS.AUTH_TOKEN);
         void router.navigate(['/auth/login']);
       }
 

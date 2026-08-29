@@ -1,8 +1,15 @@
+export type UserRole = 'ADMIN' | 'WAITER';
+
 export interface UserSession {
-  id: string;
-  name: string;
-  email: string;
-  roles: string[];
+  userId: number;
+
+  username: string;
+
+  firstName: string;
+  lastName?: string;
+
+  role: UserRole;
+
   accessToken: string;
-  refreshToken?: string;
+  tokenType: string;
 }

@@ -1,0 +1,81 @@
+ion-content {
+  --background: #f5f6f8;
+}
+
+.dashboard-page {
+  min-height: 100%;
+  padding: 24px;
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.dashboard-header p {
+  margin: 0 0 6px;
+  color: #9b741b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  color: #141719;
+  font-size: 28px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-card,
+.status-card {
+  padding: 16px;
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.summary-card span,
+.status-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: #6c737a;
+  font-size: 12px;
+}
+
+.summary-card strong,
+.status-card strong {
+  color: #171a1d;
+  font-size: 22px;
+}
+
+.status-card {
+  margin-top: 12px;
+}
+
+.status-card p {
+  margin: 10px 0 0;
+  color: #6c737a;
+  font-size: 13px;
+}
+
+.actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.loading-state,
+.error-state {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.error-state {
+  color: #b42318;
+}
