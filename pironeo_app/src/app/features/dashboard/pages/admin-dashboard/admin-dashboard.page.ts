@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonSpinner } from '@ionic/angular';
+import { Router, RouterLink } from '@angular/router';
+import { IonButton, IonContent, IonIcon, IonSpinner } from '@ionic/angular';
 import { finalize } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
 
+import { AuthService } from '../../../auth/services/auth.service';
 import { AdminDashboard } from '../../models/admin-dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 
@@ -14,6 +17,7 @@ import { DashboardService } from '../../services/dashboard.service';
     CommonModule,
     IonButton,
     IonContent,
+    IonIcon,
     IonSpinner,
     RouterLink
   ],
@@ -29,8 +33,12 @@ export class AdminDashboardPage implements OnInit {
   errorMessage = '';
 
   constructor(
-    private readonly dashboardService: DashboardService
-  ) {}
+    private readonly dashboardService: DashboardService,
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {
+    addIcons({ logOutOutline });
+  }
 
   ngOnInit(): void {
     this.loadDashboard();
@@ -61,6 +69,13 @@ export class AdminDashboardPage implements OnInit {
             ?? 'No se pudo cargar el dashboard';
         }
       });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    void this.router.navigateByUrl('/auth/login', {
+      replaceUrl: true
+    });
   }
 
   private getToday(): string {

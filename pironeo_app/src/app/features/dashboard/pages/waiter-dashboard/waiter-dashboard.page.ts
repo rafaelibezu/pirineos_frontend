@@ -26,6 +26,7 @@ import {
   documentTextOutline,
   homeOutline,
   listOutline,
+  logOutOutline,
   notificationsOutline,
   personCircleOutline,
   scaleOutline,
@@ -41,6 +42,7 @@ import {
   WaiterMovement
 } from '../../models/waiter-dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-waiter-dashboard',
@@ -61,6 +63,9 @@ export class WaiterDashboardPage implements OnInit {
 
   private readonly router =
     inject(Router);
+
+  private readonly authService =
+    inject(AuthService);
 
   readonly loading =
     signal(true);
@@ -122,6 +127,7 @@ export class WaiterDashboardPage implements OnInit {
       documentTextOutline,
       homeOutline,
       listOutline,
+      logOutOutline,
       notificationsOutline,
       personCircleOutline,
       scaleOutline,
@@ -159,6 +165,13 @@ export class WaiterDashboardPage implements OnInit {
 
   goToClosing(): void {
     this.router.navigateByUrl('/closing');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    void this.router.navigateByUrl('/auth/login', {
+      replaceUrl: true
+    });
   }
 
   goToPayments(): void {

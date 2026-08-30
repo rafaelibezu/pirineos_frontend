@@ -8,6 +8,10 @@ ion-content {
 }
 
 .dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -22,6 +26,35 @@ ion-content {
   margin: 0;
   color: #141719;
   font-size: 28px;
+}
+
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #d7dade;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-button ion-icon {
+  font-size: 19px;
+}
+
+.logout-button:focus-visible {
+  outline: 2px solid #9b741b;
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+  .logout-button span {
+    display: none;
+  }
 }
 
 .summary-grid {

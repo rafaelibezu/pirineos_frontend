@@ -3,8 +3,19 @@
   <section class="dashboard-page">
 
     <header class="dashboard-header">
-      <p>Administrador</p>
-      <h1>Dashboard</h1>
+      <div>
+        <p>Administrador</p>
+        <h1>Dashboard</h1>
+      </div>
+
+      <button
+        type="button"
+        class="logout-button"
+        (click)="logout()"
+      >
+        <ion-icon name="log-out-outline"></ion-icon>
+        <span>Cerrar sesión</span>
+      </button>
     </header>
 
     <div
