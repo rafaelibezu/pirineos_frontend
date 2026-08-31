@@ -3,119 +3,312 @@
   <div class="user-form-page">
 
     <header class="top-bar">
+
       <button
         type="button"
-        class="icon-button"
-        aria-label="Volver"
+        class="back-button"
         (click)="goBack()"
       >
-        <ion-icon name="arrow-back-outline"></ion-icon>
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
       </button>
 
       <div class="title-area">
-        <h1>{{ isEditMode() ? 'Editar usuario' : 'Nuevo usuario' }}</h1>
-        <p>Completa los datos de acceso</p>
+
+        <h1>
+          Nuevo usuario
+        </h1>
+
+        <p>
+          Crea un acceso para el personal
+        </p>
+
       </div>
 
-      <div class="header-spacer"></div>
+      <div class="header-space"></div>
+
     </header>
-
-    <div
-      class="loading-state"
-      *ngIf="loading()"
-    >
-      <ion-spinner name="crescent"></ion-spinner>
-    </div>
-
-    <div
-      class="error-state"
-      *ngIf="errorMessage() && !loading()"
-    >
-      <p>{{ errorMessage() }}</p>
-    </div>
 
     <form
       class="user-form"
       [formGroup]="form"
-      *ngIf="!loading()"
-      (ngSubmit)="submit()"
+      (ngSubmit)="save()"
     >
-      <section class="form-card">
-        <div class="form-avatar" aria-hidden="true">
-          <ion-icon name="person-outline"></ion-icon>
+
+      <section class="form-section">
+
+        <div class="section-title">
+
+          <span class="section-icon">
+            <ion-icon
+              name="person-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>
+              Datos personales
+            </strong>
+
+            <span>
+              Información básica del usuario
+            </span>
+          </div>
+
         </div>
 
-        <label class="field">
-          <span>Usuario</span>
-          <input
-            type="text"
-            formControlName="username"
-            placeholder="usuario"
-          />
-          <small *ngIf="form.controls.username.touched && form.controls.username.invalid">
-            Ingresa un usuario válido.
-          </small>
-        </label>
+        <div class="field">
 
-        <label class="field">
-          <span>Nombres</span>
+          <label>
+            Nombre
+          </label>
+
           <input
             type="text"
             formControlName="firstName"
-            placeholder="Nombres"
+            placeholder="Ej. Brenda"
           />
-          <small *ngIf="form.controls.firstName.touched && form.controls.firstName.invalid">
-            Ingresa el nombre.
-          </small>
-        </label>
 
-        <label class="field">
-          <span>Apellidos</span>
+          @if (
+            form.controls.firstName.touched &&
+            form.controls.firstName.invalid
+          ) {
+
+            <small class="field-error">
+              Ingresa el nombre.
+            </small>
+
+          }
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Apellido
+          </label>
+
           <input
             type="text"
             formControlName="lastName"
-            placeholder="Apellidos"
+            placeholder="Ej. López"
           />
-        </label>
 
-        <div class="field">
-          <span>Rol</span>
-          <div class="role-tabs">
-            <label>
-              <input
-                type="radio"
-                formControlName="role"
-                value="WAITER"
-              />
-              <span>Camarero</span>
-            </label>
-            <label>
-              <input
-                type="radio"
-                formControlName="role"
-                value="ADMIN"
-              />
-              <span>Admin</span>
-            </label>
-          </div>
+          @if (
+            form.controls.lastName.touched &&
+            form.controls.lastName.invalid
+          ) {
+
+            <small class="field-error">
+              Ingresa el apellido.
+            </small>
+
+          }
+
         </div>
 
-        <label class="toggle-row">
-          <span>
-            <strong>Usuario activo</strong>
-            <small>Permite iniciar sesión en el sistema</small>
-          </span>
-          <input
-            type="checkbox"
-            formControlName="active"
-          />
-        </label>
       </section>
 
-      <button type="submit" class="save-button">
-        <ion-icon name="save-outline"></ion-icon>
-        Guardar usuario
+      <section class="form-section">
+
+        <div class="section-title">
+
+          <span class="section-icon gold">
+            <ion-icon
+              name="shield-checkmark-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>
+              Acceso al sistema
+            </strong>
+
+            <span>
+              Usuario, contraseña y permisos
+            </span>
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Usuario
+          </label>
+
+          <input
+            type="text"
+            formControlName="username"
+            placeholder="Ej. brenda"
+            autocomplete="username"
+          />
+
+          @if (
+            form.controls.username.touched &&
+            form.controls.username.invalid
+          ) {
+
+            <small class="field-error">
+              Ingresa un usuario válido.
+            </small>
+
+          }
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Contraseña
+          </label>
+
+          <div class="password-field">
+
+            <input
+              [type]="
+                showPassword()
+                  ? 'text'
+                  : 'password'
+              "
+              formControlName="password"
+              placeholder="Contraseña"
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              (click)="togglePassword()"
+            >
+
+              <ion-icon
+                [name]="
+                  showPassword()
+                    ? 'eye-off-outline'
+                    : 'eye-outline'
+                "
+              ></ion-icon>
+
+            </button>
+
+          </div>
+
+          @if (
+            form.controls.password.touched &&
+            form.controls.password.invalid
+          ) {
+
+            <small class="field-error">
+              La contraseña debe tener al menos 6 caracteres.
+            </small>
+
+          }
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            Rol
+          </label>
+
+          <div class="role-selector">
+
+            <button
+              type="button"
+              class="role-option"
+              [class.selected]="
+                form.controls.roleId.value === 2
+              "
+              (click)="selectRole(2)"
+            >
+
+              <span class="role-icon waiter">
+
+                <ion-icon
+                  name="person-outline"
+                ></ion-icon>
+
+              </span>
+
+              <div>
+                <strong>
+                  Camarero
+                </strong>
+
+                <span>
+                  Operaciones diarias
+                </span>
+              </div>
+
+            </button>
+
+            <button
+              type="button"
+              class="role-option"
+              [class.selected]="
+                form.controls.roleId.value === 1
+              "
+              (click)="selectRole(1)"
+            >
+
+              <span class="role-icon admin">
+
+                <ion-icon
+                  name="shield-checkmark-outline"
+                ></ion-icon>
+
+              </span>
+
+              <div>
+                <strong>
+                  Administrador
+                </strong>
+
+                <span>
+                  Acceso completo
+                </span>
+              </div>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      @if (error()) {
+
+        <div class="form-error">
+          {{ error() }}
+        </div>
+
+      }
+
+      <button
+        type="submit"
+        class="save-button"
+        [disabled]="loading()"
+      >
+
+        @if (loading()) {
+
+          <ion-spinner
+            name="crescent"
+          ></ion-spinner>
+
+          Guardando...
+
+        } @else {
+
+          Guardar usuario
+
+        }
+
       </button>
+
     </form>
 
   </div>

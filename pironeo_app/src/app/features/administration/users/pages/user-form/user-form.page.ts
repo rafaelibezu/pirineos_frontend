@@ -1,99 +1,180 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+
+import {
+  Component,
+  inject,
+  signal
+} from '@angular/core';
+
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner } from '@ionic/angular';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+  IonContent,
+  IonIcon,
+  IonSpinner
+} from '@ionic/angular';
+
 import { addIcons } from 'ionicons';
+
 import {
   arrowBackOutline,
-  checkmarkCircleOutline,
+  eyeOffOutline,
+  eyeOutline,
   personOutline,
-  saveOutline
+  shieldCheckmarkOutline
 } from 'ionicons/icons';
 
-import { UserRole } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
+  templateUrl: './user-form.page.html',
+  styleUrls: ['./user-form.page.scss'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     IonContent,
     IonIcon,
     IonSpinner
-  ],
-  templateUrl: './user-form.page.html',
-  styleUrl: './user-form.page.scss'
+  ]
 })
-export class UserFormPage implements OnInit {
+export class UserFormPage {
 
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   readonly loading = signal(false);
-  readonly errorMessage = signal('');
-  readonly isEditMode = signal(false);
+  readonly error = signal('');
+  readonly showPassword = signal(false);
 
-  readonly form = this.formBuilder.nonNullable.group({
-    username: ['', [Validators.required, Validators.minLength(3)]],
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: [''],
-    role: this.formBuilder.nonNullable.control<UserRole>('WAITER', Validators.required),
-    active: [true]
+  readonly form = this.fb.nonNullable.group({
+
+    firstName: [
+      '',
+      [
+        Validators.required,
+        Validators.maxLength(100)
+      ]
+    ],
+
+    lastName: [
+      '',
+      [
+        Validators.required,
+        Validators.maxLength(100)
+      ]
+    ],
+
+    username: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100)
+      ]
+    ],
+
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(6)
+      ]
+    ],
+
+    roleId: [
+      2,
+      [
+        Validators.required
+      ]
+    ]
+
   });
 
   constructor() {
+
     addIcons({
       arrowBackOutline,
-      checkmarkCircleOutline,
+      eyeOffOutline,
+      eyeOutline,
       personOutline,
-      saveOutline
+      shieldCheckmarkOutline
     });
+
   }
 
-  ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+  selectRole(roleId: number): void {
+    this.form.controls.roleId.setValue(roleId);
+  }
 
-    if (!id) {
+  togglePassword(): void {
+    this.showPassword.update(
+      value => !value
+    );
+  }
+
+  save(): void {
+
+    this.error.set('');
+
+    if (this.form.invalid) {
+
+      this.form.markAllAsTouched();
+
       return;
     }
 
-    this.isEditMode.set(true);
     this.loading.set(true);
 
-    this.userService.getById(id).subscribe({
-      next: response => {
-        this.form.patchValue(response.data);
-        this.loading.set(false);
-      },
-      error: error => {
-        this.errorMessage.set(
-          error?.error?.message ?? 'No se pudo cargar el usuario'
-        );
-        this.loading.set(false);
-      }
-    });
+    this.userService
+      .create(this.form.getRawValue())
+      .subscribe({
+
+        next: () => {
+
+          this.loading.set(false);
+
+          this.router.navigateByUrl(
+            '/administration/users'
+          );
+
+        },
+
+        error: error => {
+
+          console.error(
+            'Error creando usuario',
+            error
+          );
+
+          this.error.set(
+            error?.error?.message
+              ?? 'No se pudo crear el usuario.'
+          );
+
+          this.loading.set(false);
+
+        }
+
+      });
+
   }
 
   goBack(): void {
-    void this.router.navigateByUrl('/administration/users');
-  }
 
-  submit(): void {
-    this.form.markAllAsTouched();
+    this.router.navigateByUrl(
+      '/administration/users'
+    );
 
-    if (this.form.invalid) {
-      return;
-    }
-
-    void this.router.navigateByUrl('/administration/users');
   }
 }

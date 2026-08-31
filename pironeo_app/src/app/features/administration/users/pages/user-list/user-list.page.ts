@@ -77,9 +77,9 @@ export class UserListPage implements OnInit {
   readonly filteredUsers = computed(() => {
 
     const text =
-      this.search()
-        .trim()
-        .toLowerCase();
+      this.normalizeText(
+        this.search()
+      );
 
     if (!text) {
       return this.users();
@@ -88,20 +88,20 @@ export class UserListPage implements OnInit {
     return this.users().filter(user => {
 
       const fullName =
-        `${user.firstName ?? ''} ${user.lastName ?? ''}`
-          .toLowerCase();
+        `${user.firstName ?? ''} ${user.lastName ?? ''}`;
 
-      return (
-        user.username
-          .toLowerCase()
-          .includes(text)
-        ||
-        fullName.includes(text)
-        ||
-        user.role
-          .toLowerCase()
-          .includes(text)
-      );
+      const searchableText =
+        this.normalizeText(
+          [
+            user.username,
+            fullName,
+            user.role,
+            user.role === 'ADMIN' ? 'administrador admin' : 'camarero waiter',
+            user.active ? 'activo' : 'inactivo'
+          ].join(' ')
+        );
+
+      return searchableText.includes(text);
 
     });
 
@@ -206,5 +206,14 @@ export class UserListPage implements OnInit {
     this.router.navigateByUrl(
       '/administration'
     );
+  }
+
+  private normalizeText(value: string): string {
+
+    return value
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 }
