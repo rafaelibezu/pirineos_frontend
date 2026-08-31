@@ -198,6 +198,12 @@ ion-content {
   transform: scale(0.988);
 }
 
+.add-button:disabled,
+.floating-button:disabled {
+  opacity: 0.68;
+  cursor: wait;
+}
+
 .avatar {
   width: 48px;
   height: 48px;

@@ -57,6 +57,7 @@ export class UserListPage implements OnInit {
   readonly users = signal<User[]>([]);
   readonly loading = signal(true);
   readonly error = signal('');
+  readonly navigatingToForm = signal(false);
 
   readonly search = signal('');
 
@@ -133,6 +134,7 @@ export class UserListPage implements OnInit {
     );
 
     this.loadUsers();
+    void this.preloadUserForm();
   }
 
   loadUsers(): void {
@@ -183,9 +185,17 @@ export class UserListPage implements OnInit {
     );
   }
 
-  createUser(): void {
+  async createUser(): Promise<void> {
 
-    this.router.navigateByUrl(
+    if (this.navigatingToForm()) {
+      return;
+    }
+
+    this.navigatingToForm.set(true);
+
+    await this.preloadUserForm();
+
+    await this.router.navigateByUrl(
       '/administration/users/new'
     );
   }
@@ -215,5 +225,10 @@ export class UserListPage implements OnInit {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  private async preloadUserForm(): Promise<void> {
+
+    await import('../user-form/user-form.page');
   }
 }
