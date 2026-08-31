@@ -1,0 +1,71 @@
+<ion-content [fullscreen]="true">
+
+  <div class="administration-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+
+      <div class="title-area">
+        <h1>Administración</h1>
+        <p>Configuración y gestión del negocio</p>
+      </div>
+
+      <div class="header-spacer"></div>
+
+    </header>
+
+    <section class="administration-list">
+
+      @for (
+        option of options;
+        track option.title
+      ) {
+
+        <button
+          type="button"
+          class="administration-card"
+          (click)="goTo(option.route)"
+        >
+
+          <div
+            class="option-icon"
+            [ngClass]="option.accentClass"
+          >
+            <ion-icon
+              [name]="option.icon"
+            ></ion-icon>
+          </div>
+
+          <div class="option-content">
+
+            <strong>
+              {{ option.title }}
+            </strong>
+
+            <span>
+              {{ option.description }}
+            </span>
+
+          </div>
+
+          <ion-icon
+            class="arrow-icon"
+            name="chevron-forward-outline"
+          ></ion-icon>
+
+        </button>
+
+      }
+
+    </section>
+
+  </div>
+
+</ion-content>

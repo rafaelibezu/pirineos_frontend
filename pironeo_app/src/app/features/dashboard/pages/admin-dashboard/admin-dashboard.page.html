@@ -19,17 +19,11 @@
       </div>
     </header>
 
-    <div
-      class="loading-state"
-      *ngIf="loading()"
-    >
+    <div class="loading-state" *ngIf="loading()">
       <ion-spinner name="crescent"></ion-spinner>
     </div>
 
-    <div
-      class="error-state"
-      *ngIf="errorMessage() && !loading()"
-    >
+    <div class="error-state" *ngIf="errorMessage() && !loading()">
       <p>{{ errorMessage() }}</p>
       <button type="button" (click)="loadDashboard()">
         Reintentar
@@ -51,8 +45,10 @@
       <section class="filters-panel">
         <div class="period-tabs">
           <button type="button" [class.active]="selectedPeriod() === 'day'" (click)="selectPeriod('day')">Día</button>
-          <button type="button" [class.active]="selectedPeriod() === 'week'" (click)="selectPeriod('week')">Semana</button>
-          <button type="button" [class.active]="selectedPeriod() === 'month'" (click)="selectPeriod('month')">Mes</button>
+          <button type="button" [class.active]="selectedPeriod() === 'week'"
+            (click)="selectPeriod('week')">Semana</button>
+          <button type="button" [class.active]="selectedPeriod() === 'month'"
+            (click)="selectPeriod('month')">Mes</button>
         </div>
         <label class="date-picker">
           <ion-icon name="calendar-outline"></ion-icon><span>{{ displayDate() }}</span>
@@ -60,35 +56,59 @@
         </label>
         <div class="shift-tabs">
           <button type="button" [class.active]="selectedShift() === 'all'" (click)="selectShift('all')">Todos</button>
-          <button type="button" [class.active]="selectedShift() === 'morning'" (click)="selectShift('morning')">Mañana</button>
-          <button type="button" [class.active]="selectedShift() === 'afternoon'" (click)="selectShift('afternoon')">Tarde</button>
+          <button type="button" [class.active]="selectedShift() === 'morning'"
+            (click)="selectShift('morning')">Mañana</button>
+          <button type="button" [class.active]="selectedShift() === 'afternoon'"
+            (click)="selectShift('afternoon')">Tarde</button>
         </div>
         <button type="button" class="filter-button"><ion-icon name="filter-outline"></ion-icon>Filtrar</button>
       </section>
 
       <section class="metrics-grid">
-        <article class="metric-card purple"><span class="metric-icon"><ion-icon name="calendar-outline"></ion-icon></span><div><small>Total cierres</small><strong>{{ data.summary.totalClosings }}</strong><em>Periodo seleccionado</em></div></article>
-        <article class="metric-card cyan"><span class="metric-icon"><ion-icon name="briefcase-outline"></ion-icon></span><div><small>Total venta</small><strong>{{ data.summary.totalSales | currency:'EUR':'symbol':'1.2-2' }}</strong><em>Venta acumulada</em></div></article>
-        <article class="metric-card blue"><span class="metric-icon"><ion-icon name="receipt-outline"></ion-icon></span><div><small>Total manual</small><strong>{{ data.summary.totalManual | currency:'EUR':'symbol':'1.2-2' }}</strong><em>Registro manual</em></div></article>
-        <article class="metric-card green"><span class="metric-icon"><ion-icon name="cash-outline"></ion-icon></span><div><small>Pagos de factura</small><strong>{{ data.summary.totalDistributorPayments | currency:'EUR':'symbol':'1.2-2' }}</strong><em>Distribuidores</em></div></article>
-        <article class="metric-card amber"><span class="metric-icon"><ion-icon name="wallet-outline"></ion-icon></span><div><small>Total cajas</small><strong>{{ data.summary.totalCash | currency:'EUR':'symbol':'1.2-2' }}</strong><em>{{ data.cashRegisters.length }} cajas activas</em></div></article>
-        <article class="metric-card rose"><span class="metric-icon"><ion-icon name="stats-chart-outline"></ion-icon></span><div><small>Descuadre total</small><strong>{{ data.summary.totalDifference | currency:'EUR':'symbol':'1.2-2' }}</strong><em>Balance del periodo</em></div></article>
+        <article class="metric-card purple"><span class="metric-icon"><ion-icon
+              name="calendar-outline"></ion-icon></span>
+          <div><small>Total cierres</small><strong>{{ data.summary.totalClosings }}</strong><em>Periodo
+              seleccionado</em></div>
+        </article>
+        <article class="metric-card cyan"><span class="metric-icon"><ion-icon
+              name="briefcase-outline"></ion-icon></span>
+          <div><small>Total venta</small><strong>{{ data.summary.totalSales | currency:'EUR':'symbol':'1.2-2'
+              }}</strong><em>Venta acumulada</em></div>
+        </article>
+        <article class="metric-card blue"><span class="metric-icon"><ion-icon name="receipt-outline"></ion-icon></span>
+          <div><small>Total manual</small><strong>{{ data.summary.totalManual | currency:'EUR':'symbol':'1.2-2'
+              }}</strong><em>Registro manual</em></div>
+        </article>
+        <article class="metric-card green"><span class="metric-icon"><ion-icon name="cash-outline"></ion-icon></span>
+          <div><small>Pagos de factura</small><strong>{{ data.summary.totalDistributorPayments |
+              currency:'EUR':'symbol':'1.2-2' }}</strong><em>Distribuidores</em></div>
+        </article>
+        <article class="metric-card amber"><span class="metric-icon"><ion-icon name="wallet-outline"></ion-icon></span>
+          <div><small>Total cajas</small><strong>{{ data.summary.totalCash | currency:'EUR':'symbol':'1.2-2'
+              }}</strong><em>{{ data.cashRegisters.length }} cajas activas</em></div>
+        </article>
+        <article class="metric-card rose"><span class="metric-icon"><ion-icon
+              name="stats-chart-outline"></ion-icon></span>
+          <div><small>Descuadre total</small><strong>{{ data.summary.totalDifference | currency:'EUR':'symbol':'1.2-2'
+              }}</strong><em>Balance del periodo</em></div>
+        </article>
       </section>
 
       <section class="panel sales-chart">
         <div class="panel-heading">
           <div><span>Ventas por turno</span><small>Comparativa del periodo</small></div>
-          <span class="period-badge">{{ selectedPeriod() === 'day' ? 'Día' : selectedPeriod() === 'week' ? 'Semana' : 'Mes' }}</span>
+          <span class="period-badge">{{ selectedPeriod() === 'day' ? 'Día' : selectedPeriod() === 'week' ? 'Semana' :
+            'Mes' }}</span>
         </div>
         <div class="chart-area">
           <div class="chart-grid"><i></i><i></i><i></i><i></i></div>
           <div class="bars">
             @for (shift of data.shifts; track shift.shiftId) {
-              <div class="bar-column">
-                <span class="bar-value">{{ shift.totalSales | currency:'EUR':'symbol':'1.0-0' }}</span>
-                <span class="bar" [style.height.%]="getShiftBarHeight(shift.totalSales)"></span>
-                <small>{{ shift.shiftName }}</small>
-              </div>
+            <div class="bar-column">
+              <span class="bar-value">{{ shift.totalSales | currency:'EUR':'symbol':'1.0-0' }}</span>
+              <span class="bar" [style.height.%]="getShiftBarHeight(shift.totalSales)"></span>
+              <small>{{ shift.shiftName }}</small>
+            </div>
             } @empty { <p class="empty-copy">No hay ventas por turno en este periodo.</p> }
           </div>
         </div>
@@ -98,14 +118,16 @@
         <section class="panel">
           <div class="panel-heading"><span>Ventas por turno</span></div>
           <div class="shift-breakdown">
-            <div class="donut sales-donut"><span><small>Total</small>{{ data.summary.totalSales | currency:'EUR':'symbol':'1.0-0' }}</span></div>
+            <div class="donut sales-donut"><span><small>Total</small>{{ data.summary.totalSales |
+                currency:'EUR':'symbol':'1.0-0' }}</span></div>
             <div class="legend">
               @for (shift of data.shifts.slice(0, 3); track shift.shiftId; let index = $index) {
-                <div>
-                  <i [class]="'dot color-' + index"></i>
-                  <span>{{ shift.shiftName }}<small>{{ getShiftPercent(shift.totalSales) | number:'1.0-1' }}%</small></span>
-                  <strong>{{ shift.totalSales | currency:'EUR':'symbol':'1.0-0' }}</strong>
-                </div>
+              <div>
+                <i [class]="'dot color-' + index"></i>
+                <span>{{ shift.shiftName }}<small>{{ getShiftPercent(shift.totalSales) | number:'1.0-1'
+                    }}%</small></span>
+                <strong>{{ shift.totalSales | currency:'EUR':'symbol':'1.0-0' }}</strong>
+              </div>
               } @empty { <p class="empty-copy">Sin datos por turno.</p> }
             </div>
           </div>
@@ -114,10 +136,12 @@
         <section class="panel">
           <div class="panel-heading"><span>Pagos de distribuidores</span></div>
           <div class="payments-summary">
-            <div class="donut payment-donut"><span><small>Total</small>{{ data.summary.totalDistributorPayments | currency:'EUR':'symbol':'1.0-0' }}</span></div>
+            <div class="donut payment-donut"><span><small>Total</small>{{ data.summary.totalDistributorPayments |
+                currency:'EUR':'symbol':'1.0-0' }}</span></div>
             <div class="supplier-list">
               @for (supplier of data.distributors.slice(0, 3); track supplier.distributorId) {
-                <div><span>{{ supplier.distributorName }}</span><strong>{{ supplier.totalPaid | currency:'EUR':'symbol':'1.0-0' }}</strong></div>
+              <div><span>{{ supplier.distributorName }}</span><strong>{{ supplier.totalPaid |
+                  currency:'EUR':'symbol':'1.0-0' }}</strong></div>
               } @empty { <p class="empty-copy">Sin pagos registrados.</p> }
             </div>
           </div>
@@ -128,8 +152,12 @@
 
     <nav class="bottom-nav">
       <button type="button" class="active"><ion-icon name="home-outline"></ion-icon><span>Inicio</span></button>
-      <button type="button" (click)="goToPayments()"><ion-icon name="card-outline"></ion-icon><span>Pagos</span></button>
-      <button type="button" (click)="goToClosing()"><ion-icon name="swap-horizontal-outline"></ion-icon><span>Traspasos</span></button>
+      <button type="button" (click)="goToAdministration()"><ion-icon
+          name="shield-checkmark-outline"></ion-icon><span>Admin</span></button>
+      <button type="button" (click)="goToPayments()"><ion-icon
+          name="card-outline"></ion-icon><span>Pagos</span></button>
+      <button type="button" (click)="goToClosing()"><ion-icon
+          name="swap-horizontal-outline"></ion-icon><span>Traspasos</span></button>
       <button type="button"><ion-icon name="person-circle-outline"></ion-icon><span>Perfil</span></button>
     </nav>
 

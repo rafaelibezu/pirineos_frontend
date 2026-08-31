@@ -14,6 +14,7 @@ import {
   notificationsOutline,
   personCircleOutline,
   receiptOutline,
+  shieldCheckmarkOutline,
   statsChartOutline,
   swapHorizontalOutline,
   walletOutline
@@ -71,6 +72,7 @@ export class AdminDashboardPage implements OnInit {
       notificationsOutline,
       personCircleOutline,
       receiptOutline,
+      shieldCheckmarkOutline,
       statsChartOutline,
       swapHorizontalOutline,
       walletOutline
@@ -138,6 +140,10 @@ export class AdminDashboardPage implements OnInit {
 
   goToPayments(): void {
     void this.router.navigateByUrl('/payments/add-payment');
+  }
+
+  goToAdministration(): void {
+    void this.router.navigateByUrl('/administration');
   }
 
   logout(): void {
