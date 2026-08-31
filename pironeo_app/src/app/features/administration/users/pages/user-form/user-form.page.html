@@ -1,0 +1,123 @@
+<ion-content [fullscreen]="true">
+
+  <div class="user-form-page">
+
+    <header class="top-bar">
+      <button
+        type="button"
+        class="icon-button"
+        aria-label="Volver"
+        (click)="goBack()"
+      >
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+
+      <div class="title-area">
+        <h1>{{ isEditMode() ? 'Editar usuario' : 'Nuevo usuario' }}</h1>
+        <p>Completa los datos de acceso</p>
+      </div>
+
+      <div class="header-spacer"></div>
+    </header>
+
+    <div
+      class="loading-state"
+      *ngIf="loading()"
+    >
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <div
+      class="error-state"
+      *ngIf="errorMessage() && !loading()"
+    >
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <form
+      class="user-form"
+      [formGroup]="form"
+      *ngIf="!loading()"
+      (ngSubmit)="submit()"
+    >
+      <section class="form-card">
+        <div class="form-avatar" aria-hidden="true">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+
+        <label class="field">
+          <span>Usuario</span>
+          <input
+            type="text"
+            formControlName="username"
+            placeholder="usuario"
+          />
+          <small *ngIf="form.controls.username.touched && form.controls.username.invalid">
+            Ingresa un usuario válido.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Nombres</span>
+          <input
+            type="text"
+            formControlName="firstName"
+            placeholder="Nombres"
+          />
+          <small *ngIf="form.controls.firstName.touched && form.controls.firstName.invalid">
+            Ingresa el nombre.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Apellidos</span>
+          <input
+            type="text"
+            formControlName="lastName"
+            placeholder="Apellidos"
+          />
+        </label>
+
+        <div class="field">
+          <span>Rol</span>
+          <div class="role-tabs">
+            <label>
+              <input
+                type="radio"
+                formControlName="role"
+                value="WAITER"
+              />
+              <span>Camarero</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                formControlName="role"
+                value="ADMIN"
+              />
+              <span>Admin</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Usuario activo</strong>
+            <small>Permite iniciar sesión en el sistema</small>
+          </span>
+          <input
+            type="checkbox"
+            formControlName="active"
+          />
+        </label>
+      </section>
+
+      <button type="submit" class="save-button">
+        <ion-icon name="save-outline"></ion-icon>
+        Guardar usuario
+      </button>
+    </form>
+
+  </div>
+
+</ion-content>

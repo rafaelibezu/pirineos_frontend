@@ -1,0 +1,223 @@
+ion-content {
+  --background: #060809;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.user-form-page {
+  min-height: 100%;
+  padding: max(22px, env(safe-area-inset-top)) 16px 100px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0, 179, 164, .08), transparent 28%),
+    #060809;
+}
+
+.top-bar,
+.user-form,
+.loading-state,
+.error-state {
+  width: min(100%, 680px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.top-bar {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #242b2e;
+  border-radius: 8px;
+  background: #0d1113;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.title-area {
+  min-width: 0;
+  text-align: center;
+}
+
+.title-area h1 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.title-area p {
+  margin: 5px 0 0;
+  color: #8f9698;
+  font-size: 12px;
+}
+
+.header-spacer {
+  width: 42px;
+}
+
+.user-form {
+  display: grid;
+  gap: 14px;
+}
+
+.form-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #252b2e;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #101416, #0b0e10);
+}
+
+.form-avatar {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(30, 212, 197, .12);
+  color: #32e0d0;
+  font-size: 28px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field > span {
+  color: #cfd6d8;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.field input[type='text'] {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid #252b2e;
+  border-radius: 8px;
+  outline: 0;
+  background: #0d1113;
+  color: #ffffff;
+}
+
+.field input[type='text']:focus {
+  border-color: rgba(30, 212, 197, .55);
+}
+
+.field small {
+  color: #ff8d8d;
+  font-size: 11px;
+}
+
+.role-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.role-tabs label {
+  position: relative;
+}
+
+.role-tabs input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.role-tabs span {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #252b2e;
+  border-radius: 8px;
+  background: #0d1113;
+  color: #9aa2a5;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.role-tabs input:checked + span {
+  border-color: transparent;
+  background: #1ed4c5;
+  color: #031313;
+}
+
+.toggle-row {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid #252b2e;
+  border-radius: 8px;
+  background: #0d1113;
+}
+
+.toggle-row span {
+  display: grid;
+  gap: 4px;
+}
+
+.toggle-row strong {
+  font-size: 13px;
+}
+
+.toggle-row small {
+  color: #8f9698;
+  font-size: 11px;
+}
+
+.toggle-row input {
+  width: 20px;
+  height: 20px;
+  accent-color: #1ed4c5;
+}
+
+.save-button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #1ed4c5;
+  color: #031313;
+  font-weight: 800;
+}
+
+.loading-state,
+.error-state {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  color: #9aa2a5;
+  text-align: center;
+}
+
+.loading-state ion-spinner {
+  color: #1ed4c5;
+}
+
+.error-state {
+  color: #ff8d8d;
+}

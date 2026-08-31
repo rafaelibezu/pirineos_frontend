@@ -1,0 +1,248 @@
+<ion-content [fullscreen]="true">
+
+  <div class="users-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="header-title">
+
+        <h1>
+          {{ title() }}
+        </h1>
+
+        <p>
+          {{ subtitle() }}
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="createUser()"
+      >
+        <ion-icon
+          name="add-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    <section class="search-section">
+
+      <div class="search-box">
+
+        <ion-icon
+          name="search-outline"
+        ></ion-icon>
+
+        <input
+          type="search"
+          placeholder="Buscar usuario..."
+          [value]="search()"
+          (input)="onSearch($event)"
+        />
+
+      </div>
+
+    </section>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <p>
+          Cargando usuarios...
+        </p>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <ion-icon
+          name="warning-outline"
+        ></ion-icon>
+
+        <p>
+          {{ error() }}
+        </p>
+
+        <button
+          type="button"
+          (click)="loadUsers()"
+        >
+          <ion-icon
+            name="refresh-outline"
+          ></ion-icon>
+
+          Reintentar
+        </button>
+
+      </div>
+
+    } @else {
+
+      <section class="summary">
+
+        <span>
+          {{
+            filteredUsers().length
+          }}
+
+          {{
+            filteredUsers().length === 1
+              ? 'usuario'
+              : 'usuarios'
+          }}
+        </span>
+
+      </section>
+
+      <section class="user-list">
+
+        @for (
+          user of filteredUsers();
+          track user.id
+        ) {
+
+          <button
+            type="button"
+            class="user-card"
+            (click)="editUser(user)"
+          >
+
+            <div
+              class="avatar"
+              [class.admin]="
+                user.role === 'ADMIN'
+              "
+            >
+
+              {{
+                user.firstName
+                  ? user.firstName.charAt(0).toUpperCase()
+                  : user.username.charAt(0).toUpperCase()
+              }}
+
+            </div>
+
+            <div class="user-information">
+
+              <div class="name-row">
+
+                <strong>
+                  {{ user.firstName }}
+
+                  @if (user.lastName) {
+                    {{ user.lastName }}
+                  }
+                </strong>
+
+                <span
+                  class="status"
+                  [class.inactive]="!user.active"
+                >
+
+                  {{
+                    user.active
+                      ? 'Activo'
+                      : 'Inactivo'
+                  }}
+
+                </span>
+
+              </div>
+
+              <span class="username">
+                @{{ user.username }}
+              </span>
+
+              <div
+                class="role"
+                [class.admin]="
+                  user.role === 'ADMIN'
+                "
+              >
+
+                <ion-icon
+                  [name]="
+                    user.role === 'ADMIN'
+                      ? 'shield-checkmark-outline'
+                      : 'person-outline'
+                  "
+                ></ion-icon>
+
+                {{
+                  user.role === 'ADMIN'
+                    ? 'Administrador'
+                    : 'Camarero'
+                }}
+
+              </div>
+
+            </div>
+
+            <ion-icon
+              class="arrow"
+              name="chevron-forward-outline"
+            ></ion-icon>
+
+          </button>
+
+        } @empty {
+
+          <div class="empty-state">
+
+            <ion-icon
+              name="people-outline"
+            ></ion-icon>
+
+            <h2>
+              No hay usuarios
+            </h2>
+
+            <p>
+              No encontramos usuarios con esos criterios.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+    <button
+      type="button"
+      class="floating-button"
+      (click)="createUser()"
+    >
+
+      <ion-icon
+        name="add-outline"
+      ></ion-icon>
+
+      Nuevo usuario
+
+    </button>
+
+  </div>
+
+</ion-content>
