@@ -1,0 +1,212 @@
+<ion-content [fullscreen]="true">
+
+  <div class="shift-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Turnos
+        </h1>
+
+        <p>
+          Gestiona los turnos de trabajo
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="createShift()"
+      >
+
+        <ion-icon
+          name="add-outline"
+        ></ion-icon>
+
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <p>
+          Cargando turnos...
+        </p>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <ion-icon
+          name="warning-outline"
+        ></ion-icon>
+
+        <p>
+          {{ error() }}
+        </p>
+
+        <button
+          type="button"
+          class="retry-button"
+          (click)="loadShifts()"
+        >
+
+          <ion-icon
+            name="refresh-outline"
+          ></ion-icon>
+
+          Reintentar
+
+        </button>
+
+      </div>
+
+    } @else {
+
+      <section class="summary">
+
+        <span>
+
+          {{ shifts().length }}
+
+          {{
+            shifts().length === 1
+              ? 'turno registrado'
+              : 'turnos registrados'
+          }}
+
+        </span>
+
+      </section>
+
+      <section class="shift-list">
+
+        @for (
+          shift of shifts();
+          track shift.id
+        ) {
+
+          <button
+            type="button"
+            class="shift-card"
+            (click)="viewShift(shift)"
+          >
+
+            <div class="shift-icon">
+
+              <ion-icon
+                [name]="getShiftIcon(shift)"
+              ></ion-icon>
+
+            </div>
+
+            <div class="shift-info">
+
+              <div class="name-row">
+
+                <strong>
+                  {{ shift.name }}
+                </strong>
+
+                <span
+                  class="status"
+                  [class.inactive]="
+                    !shift.active
+                  "
+                >
+
+                  {{
+                    shift.active
+                      ? 'Activo'
+                      : 'Inactivo'
+                  }}
+
+                </span>
+
+              </div>
+
+              <span class="code">
+                {{ shift.code }}
+              </span>
+
+              <span class="description">
+                {{ getShiftDescription(shift) }}
+              </span>
+
+            </div>
+
+            <ion-icon
+              class="arrow"
+              name="chevron-forward-outline"
+            ></ion-icon>
+
+          </button>
+
+        } @empty {
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+
+              <ion-icon
+                name="time-outline"
+              ></ion-icon>
+
+            </div>
+
+            <h2>
+              No hay turnos
+            </h2>
+
+            <p>
+              Aun no se han registrado turnos.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+    <button
+      type="button"
+      class="floating-button"
+      (click)="createShift()"
+    >
+
+      <ion-icon
+        name="add-outline"
+      ></ion-icon>
+
+      Nuevo turno
+
+    </button>
+
+  </div>
+
+</ion-content>

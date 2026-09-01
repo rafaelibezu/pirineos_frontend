@@ -103,6 +103,46 @@ export const ADMINISTRATION_ROUTES: Routes = [
           ).then(
             m => m.CashRegisterDetailPage
           )
+      },
+
+      {
+        path: 'shifts',
+        loadComponent: () =>
+          import(
+            './shifts/pages/shift-list/shift-list.page'
+          ).then(
+            m => m.ShiftListPage
+          )
+      },
+
+      {
+        path: 'shifts/new',
+        loadComponent: () =>
+          import(
+            './shifts/pages/shift-form/shift-form.page'
+          ).then(
+            m => m.ShiftFormPage
+          )
+      },
+
+      {
+        path: 'shifts/:id/edit',
+        loadComponent: () =>
+          import(
+            './shifts/pages/shift-form/shift-form.page'
+          ).then(
+            m => m.ShiftFormPage
+          )
+      },
+
+      {
+        path: 'shifts/:id',
+        loadComponent: () =>
+          import(
+            './shifts/pages/shift-detail/shift-detail.page'
+          ).then(
+            m => m.ShiftDetailPage
+          )
       }
 
     ]

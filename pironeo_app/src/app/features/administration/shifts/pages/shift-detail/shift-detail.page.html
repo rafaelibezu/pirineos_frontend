@@ -1,0 +1,211 @@
+<ion-content [fullscreen]="true">
+
+  <div class="shift-detail-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Detalle de turno
+        </h1>
+
+        <p>
+          Informacion y estado
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="edit-top-button"
+        (click)="edit()"
+        [disabled]="!shift()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <span>
+          Cargando turno...
+        </span>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <p>
+          {{ error() }}
+        </p>
+
+      </div>
+
+    } @else if (shift(); as currentShift) {
+
+      <section class="profile-card">
+
+        <div
+          class="shift-icon"
+          [class.inactive]="!currentShift.active"
+        >
+          <ion-icon
+            [name]="getShiftIcon(currentShift)"
+          ></ion-icon>
+        </div>
+
+        <h2>
+          {{ currentShift.name }}
+        </h2>
+
+        <span class="code">
+          {{ currentShift.code }}
+        </span>
+
+        <div
+          class="status-badge"
+          [class.inactive]="!currentShift.active"
+        >
+
+          <ion-icon
+            [name]="
+              currentShift.active
+                ? 'checkmark-circle-outline'
+                : 'close-circle-outline'
+            "
+          ></ion-icon>
+
+          {{
+            currentShift.active
+              ? 'Turno activo'
+              : 'Turno inactivo'
+          }}
+
+        </div>
+
+      </section>
+
+      <section class="information-card">
+
+        <h3>
+          Informacion del turno
+        </h3>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="time-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Nombre
+            </span>
+
+            <strong>
+              {{ currentShift.name }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="key-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Codigo
+            </span>
+
+            <strong>
+              {{ currentShift.code }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span
+            class="row-icon"
+            [class.danger]="!currentShift.active"
+          >
+            <ion-icon
+              [name]="
+                currentShift.active
+                  ? 'checkmark-circle-outline'
+                  : 'close-circle-outline'
+              "
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Estado
+            </span>
+
+            <strong>
+              {{
+                currentShift.active
+                  ? 'Disponible'
+                  : 'Bloqueado'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="edit-button"
+        (click)="edit()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+
+        Editar turno
+      </button>
+
+    }
+
+  </div>
+
+</ion-content>
