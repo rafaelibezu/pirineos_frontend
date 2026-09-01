@@ -31,6 +31,10 @@ export const API_ENDPOINTS = {
   DISTRIBUTORS: {
     BASE: `${API_URL}/distributors`,
     ACTIVE: `${API_URL}/distributors/active`
+  },
+
+  HISTORY: {
+    BASE: `${API_URL}/history`
   }
 
 } as const;

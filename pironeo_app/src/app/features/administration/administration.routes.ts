@@ -183,6 +183,16 @@ export const ADMINISTRATION_ROUTES: Routes = [
           ).then(
             m => m.DistributorDetailPage
           )
+      },
+
+      {
+        path: 'history',
+        loadComponent: () =>
+          import(
+            './history/pages/history-list/history-list.page'
+          ).then(
+            m => m.HistoryListPage
+          )
       }
 
     ]

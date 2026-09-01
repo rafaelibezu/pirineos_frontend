@@ -1,0 +1,382 @@
+<ion-content [fullscreen]="true">
+
+  <div class="history-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Historial
+        </h1>
+
+        <p>
+          Movimientos, cierres y traspasos
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="icon-button refresh-button"
+        (click)="loadHistory()"
+      >
+        <ion-icon
+          name="refresh-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    <section class="filters-panel">
+
+      <div class="search-box">
+
+        <ion-icon
+          name="search-outline"
+        ></ion-icon>
+
+        <input
+          type="search"
+          placeholder="Buscar por usuario, concepto o descripcion..."
+          [value]="search()"
+          (input)="onSearch($event)"
+        />
+
+      </div>
+
+      <div class="filter-grid">
+
+        <label class="filter-field">
+
+          <span>
+            Desde
+          </span>
+
+          <input
+            type="date"
+            [value]="from()"
+            (change)="onFromChange($event)"
+          />
+
+        </label>
+
+        <label class="filter-field">
+
+          <span>
+            Hasta
+          </span>
+
+          <input
+            type="date"
+            [value]="to()"
+            (change)="onToChange($event)"
+          />
+
+        </label>
+
+        <label class="filter-field user-filter">
+
+          <span>
+            Usuario
+          </span>
+
+          <select
+            [value]="userId() ?? ''"
+            (change)="onUserChange($event)"
+          >
+            <option value="">
+              Todos
+            </option>
+
+            @for (
+              user of users();
+              track user.id
+            ) {
+
+              <option [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+      </div>
+
+      <div class="type-tabs">
+
+        <button
+          type="button"
+          [class.active]="type() === 'ALL'"
+          (click)="selectType('ALL')"
+        >
+          Todos
+        </button>
+
+        <button
+          type="button"
+          [class.active]="type() === 'MOVEMENT'"
+          (click)="selectType('MOVEMENT')"
+        >
+          Movimientos
+        </button>
+
+        <button
+          type="button"
+          [class.active]="type() === 'TRANSFER'"
+          (click)="selectType('TRANSFER')"
+        >
+          Traspasos
+        </button>
+
+        <button
+          type="button"
+          [class.active]="type() === 'CLOSING'"
+          (click)="selectType('CLOSING')"
+        >
+          Cierres
+        </button>
+
+      </div>
+
+    </section>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <p>
+          Cargando historial...
+        </p>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <ion-icon
+          name="warning-outline"
+        ></ion-icon>
+
+        <p>
+          {{ error() }}
+        </p>
+
+        <button
+          type="button"
+          class="retry-button"
+          (click)="loadHistory()"
+        >
+          <ion-icon
+            name="refresh-outline"
+          ></ion-icon>
+
+          Reintentar
+        </button>
+
+      </div>
+
+    } @else {
+
+      <section class="summary-grid">
+
+        <article class="metric-card">
+
+          <span>
+            Registros
+          </span>
+
+          <strong>
+            {{ filteredItems().length }}
+          </strong>
+
+        </article>
+
+        <article class="metric-card">
+
+          <span>
+            Importe
+          </span>
+
+          <strong>
+            {{ totalAmount() | currency:'EUR':'symbol':'1.2-2' }}
+          </strong>
+
+        </article>
+
+        <article class="metric-card">
+
+          <span>
+            Movimientos
+          </span>
+
+          <strong>
+            {{ movementCount() }}
+          </strong>
+
+        </article>
+
+        <article
+          class="metric-card"
+          [class.negative]="totalDifference() < 0"
+          [class.positive]="totalDifference() > 0"
+        >
+
+          <span>
+            Diferencia
+          </span>
+
+          <strong>
+            {{ totalDifference() | currency:'EUR':'symbol':'1.2-2' }}
+          </strong>
+
+        </article>
+
+      </section>
+
+      <section class="range-label">
+
+        <ion-icon
+          name="calendar-outline"
+        ></ion-icon>
+
+        <span>
+          {{ history()?.from | date:'dd/MM/yyyy' }}
+          -
+          {{ history()?.to | date:'dd/MM/yyyy' }}
+        </span>
+
+      </section>
+
+      <section class="history-list">
+
+        @for (
+          item of filteredItems();
+          track item.type + '-' + item.id + '-' + item.date
+        ) {
+
+          <article
+            class="history-card"
+            [class.movement]="item.type === 'MOVEMENT'"
+            [class.transfer]="item.type === 'TRANSFER'"
+            [class.closing]="item.type === 'CLOSING'"
+            [class.with-difference]="item.difference !== null && item.difference !== 0"
+          >
+
+            <div class="timeline-point">
+
+              <span>
+                <ion-icon
+                  [name]="getTypeIcon(item)"
+                ></ion-icon>
+              </span>
+
+            </div>
+
+            <div class="history-content">
+
+              <div class="history-header">
+
+                <div>
+
+                  <span class="type-label">
+                    {{ getTypeLabel(item.type) }}
+                  </span>
+
+                  <h2>
+                    {{ item.title }}
+                  </h2>
+
+                </div>
+
+                <strong class="amount">
+                  {{ item.amount | currency:'EUR':'symbol':'1.2-2' }}
+                </strong>
+
+              </div>
+
+              <p>
+                {{ item.description }}
+              </p>
+
+              <div class="history-footer">
+
+                <span class="user-name">
+                  {{ item.userName }}
+                </span>
+
+                <span class="date">
+                  {{ item.date | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+
+              </div>
+
+              @if (item.type === 'CLOSING') {
+
+                <div
+                  class="difference-row"
+                  [class.negative]="(item.difference ?? 0) < 0"
+                  [class.positive]="(item.difference ?? 0) > 0"
+                >
+
+                  <span>
+                    {{ getDifferenceLabel(item.difference) }}
+                  </span>
+
+                  <strong>
+                    {{ item.difference ?? 0 | currency:'EUR':'symbol':'1.2-2' }}
+                  </strong>
+
+                </div>
+
+              }
+
+            </div>
+
+          </article>
+
+        } @empty {
+
+          <div class="empty-state">
+
+            <ion-icon
+              name="document-text-outline"
+            ></ion-icon>
+
+            <h2>
+              Sin registros
+            </h2>
+
+            <p>
+              No hay movimientos con los filtros seleccionados.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+  </div>
+
+</ion-content>

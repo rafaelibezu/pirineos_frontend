@@ -18,7 +18,8 @@ import {
   pricetagsOutline,
   settingsOutline,
   chevronForwardOutline,
-  arrowBackOutline
+  arrowBackOutline,
+  documentTextOutline
 } from 'ionicons/icons';
 
 interface AdministrationOption {
@@ -81,11 +82,11 @@ export class AdministrationHomePage {
       accentClass: 'cyan'
     },
     {
-      title: 'Conceptos',
-      description: 'Gestiona conceptos de ingresos y pagos',
-      icon: 'pricetags-outline',
-      route: '/administration/concepts',
-      accentClass: 'violet'
+      title: 'Historial',
+      description: 'Revisa movimientos de los camareros',
+      icon: 'document-text-outline',
+      route: '/administration/history',
+      accentClass: 'blue'
     },
     // {
     //   title: 'Ajustes',
@@ -106,7 +107,8 @@ export class AdministrationHomePage {
       pricetagsOutline,
       settingsOutline,
       chevronForwardOutline,
-      arrowBackOutline
+      arrowBackOutline,
+      documentTextOutline
     });
   }
 
