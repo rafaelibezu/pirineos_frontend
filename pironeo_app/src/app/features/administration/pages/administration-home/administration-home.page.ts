@@ -111,7 +111,12 @@ export class AdministrationHomePage {
   }
 
   goBack(): void {
-    this.router.navigateByUrl('/dashboard/admin');
+    this.router.navigateByUrl(
+      '/dashboard/admin',
+      {
+        replaceUrl: true
+      }
+    );
   }
 
   goTo(route: string): void {

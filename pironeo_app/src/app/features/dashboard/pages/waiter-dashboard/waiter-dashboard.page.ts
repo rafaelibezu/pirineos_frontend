@@ -164,7 +164,7 @@ export class WaiterDashboardPage implements OnInit {
   }
 
   goToClosing(): void {
-    this.router.navigateByUrl('/closing');
+    this.router.navigateByUrl('/closing/step-one');
   }
 
   logout(): void {

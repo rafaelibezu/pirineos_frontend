@@ -241,10 +241,22 @@ export class UserFormPage implements OnInit {
 
           this.loading.set(false);
 
+          if (id) {
+
+            this.router.navigateByUrl(
+              `/administration/users/${response.data?.id ?? id}`,
+              {
+                state: {
+                  user: response.data
+                }
+              }
+            );
+
+            return;
+          }
+
           this.router.navigateByUrl(
-            id
-              ? `/administration/users/${response.data?.id ?? id}`
-              : '/administration/users'
+            '/administration/users'
           );
 
         },
@@ -283,7 +295,10 @@ export class UserFormPage implements OnInit {
     this.router.navigateByUrl(
       id
         ? `/administration/users/${id}`
-        : '/administration/users'
+        : '/administration/users',
+      {
+        replaceUrl: true
+      }
     );
 
   }

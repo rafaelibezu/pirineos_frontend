@@ -234,7 +234,10 @@ export class UserListPage implements OnInit {
   goBack(): void {
 
     this.router.navigateByUrl(
-      '/administration'
+      '/administration',
+      {
+        replaceUrl: true
+      }
     );
   }
 

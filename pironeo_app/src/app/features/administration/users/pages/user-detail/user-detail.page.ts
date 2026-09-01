@@ -76,6 +76,28 @@ export class UserDetailPage implements OnInit {
 
   ngOnInit(): void {
 
+    const updatedUser =
+      this.router.getCurrentNavigation()?.extras.state?.['user'] as User | undefined;
+
+    if (updatedUser) {
+      this.user.set(updatedUser);
+      this.loading.set(false);
+    }
+
+    this.refreshUser(
+      !updatedUser
+    );
+
+  }
+
+  ionViewWillEnter(): void {
+
+    this.refreshUser(false);
+
+  }
+
+  private refreshUser(showLoading: boolean): void {
+
     const id = Number(
       this.route.snapshot.paramMap.get('id')
     );
@@ -91,13 +113,22 @@ export class UserDetailPage implements OnInit {
       return;
     }
 
-    this.loadUser(id);
+    this.loadUser(
+      id,
+      showLoading
+    );
 
   }
 
-  loadUser(id: number): void {
+  loadUser(
+    id: number,
+    showLoading = true
+  ): void {
 
-    this.loading.set(true);
+    if (showLoading) {
+      this.loading.set(true);
+    }
+
     this.error.set('');
 
     this.userService
@@ -173,7 +204,10 @@ export class UserDetailPage implements OnInit {
   goBack(): void {
 
     this.router.navigateByUrl(
-      '/administration/users'
+      '/administration/users',
+      {
+        replaceUrl: true
+      }
     );
 
   }

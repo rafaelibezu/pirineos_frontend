@@ -135,7 +135,7 @@ export class AdminDashboardPage implements OnInit {
   }
 
   goToClosing(): void {
-    void this.router.navigateByUrl('/closing');
+    void this.router.navigateByUrl('/closing/step-one');
   }
 
   goToPayments(): void {

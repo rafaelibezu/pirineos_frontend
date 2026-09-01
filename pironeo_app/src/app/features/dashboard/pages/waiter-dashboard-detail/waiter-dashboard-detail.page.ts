@@ -160,7 +160,12 @@ export class WaiterDashboardDetailPage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigateByUrl('/dashboard/waiter');
+    this.router.navigateByUrl(
+      '/dashboard/waiter',
+      {
+        replaceUrl: true
+      }
+    );
   }
 
   trackClosing(
