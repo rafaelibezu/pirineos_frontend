@@ -1,0 +1,206 @@
+<ion-content [fullscreen]="true">
+
+  <div class="cash-register-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Cajas
+        </h1>
+
+        <p>
+          Gestiona las cajas del negocio
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="createCashRegister()"
+      >
+        <ion-icon
+          name="add-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <p>
+          Cargando cajas...
+        </p>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <ion-icon
+          name="warning-outline"
+        ></ion-icon>
+
+        <p>
+          {{ error() }}
+        </p>
+
+        <button
+          type="button"
+          class="retry-button"
+          (click)="loadCashRegisters()"
+        >
+
+          <ion-icon
+            name="refresh-outline"
+          ></ion-icon>
+
+          Reintentar
+
+        </button>
+
+      </div>
+
+    } @else {
+
+      <section class="summary">
+
+        <span>
+          {{ cashRegisters().length }}
+
+          {{
+            cashRegisters().length === 1
+              ? 'caja registrada'
+              : 'cajas registradas'
+          }}
+        </span>
+
+      </section>
+
+      <section class="cash-register-list">
+
+        @for (
+          cashRegister of cashRegisters();
+          track cashRegister.id
+        ) {
+
+          <button
+            type="button"
+            class="cash-register-card"
+            (click)="viewCashRegister(cashRegister)"
+          >
+
+            <div class="cash-register-icon">
+
+              <ion-icon
+                name="wallet-outline"
+              ></ion-icon>
+
+            </div>
+
+            <div class="cash-register-info">
+
+              <div class="name-row">
+
+                <strong>
+                  {{ cashRegister.name }}
+                </strong>
+
+                <span
+                  class="status"
+                  [class.inactive]="
+                    !cashRegister.active
+                  "
+                >
+
+                  {{
+                    cashRegister.active
+                      ? 'Activa'
+                      : 'Inactiva'
+                  }}
+
+                </span>
+
+              </div>
+
+              <span class="code">
+                {{ cashRegister.code }}
+              </span>
+
+              <span class="description">
+                Caja fisica del negocio
+              </span>
+
+            </div>
+
+            <ion-icon
+              class="arrow"
+              name="chevron-forward-outline"
+            ></ion-icon>
+
+          </button>
+
+        } @empty {
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+
+              <ion-icon
+                name="wallet-outline"
+              ></ion-icon>
+
+            </div>
+
+            <h2>
+              No hay cajas
+            </h2>
+
+            <p>
+              Aun no se han registrado cajas.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+    <button
+      type="button"
+      class="floating-button"
+      (click)="createCashRegister()"
+    >
+
+      <ion-icon
+        name="add-outline"
+      ></ion-icon>
+
+      Nueva caja
+
+    </button>
+
+  </div>
+
+</ion-content>

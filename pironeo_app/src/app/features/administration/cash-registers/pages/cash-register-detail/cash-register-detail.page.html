@@ -1,0 +1,211 @@
+<ion-content [fullscreen]="true">
+
+  <div class="cash-register-detail-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Detalle de caja
+        </h1>
+
+        <p>
+          Informacion y estado
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="edit-top-button"
+        (click)="edit()"
+        [disabled]="!cashRegister()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <span>
+          Cargando caja...
+        </span>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <p>
+          {{ error() }}
+        </p>
+
+      </div>
+
+    } @else if (cashRegister(); as currentCashRegister) {
+
+      <section class="profile-card">
+
+        <div
+          class="cash-register-icon"
+          [class.inactive]="!currentCashRegister.active"
+        >
+          <ion-icon
+            name="wallet-outline"
+          ></ion-icon>
+        </div>
+
+        <h2>
+          {{ currentCashRegister.name }}
+        </h2>
+
+        <span class="code">
+          {{ currentCashRegister.code }}
+        </span>
+
+        <div
+          class="status-badge"
+          [class.inactive]="!currentCashRegister.active"
+        >
+
+          <ion-icon
+            [name]="
+              currentCashRegister.active
+                ? 'checkmark-circle-outline'
+                : 'close-circle-outline'
+            "
+          ></ion-icon>
+
+          {{
+            currentCashRegister.active
+              ? 'Caja activa'
+              : 'Caja inactiva'
+          }}
+
+        </div>
+
+      </section>
+
+      <section class="information-card">
+
+        <h3>
+          Informacion de la caja
+        </h3>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="wallet-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Nombre
+            </span>
+
+            <strong>
+              {{ currentCashRegister.name }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="key-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Codigo
+            </span>
+
+            <strong>
+              {{ currentCashRegister.code }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span
+            class="row-icon"
+            [class.danger]="!currentCashRegister.active"
+          >
+            <ion-icon
+              [name]="
+                currentCashRegister.active
+                  ? 'checkmark-circle-outline'
+                  : 'close-circle-outline'
+              "
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Estado
+            </span>
+
+            <strong>
+              {{
+                currentCashRegister.active
+                  ? 'Disponible'
+                  : 'Bloqueada'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="edit-button"
+        (click)="edit()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+
+        Editar caja
+      </button>
+
+    }
+
+  </div>
+
+</ion-content>

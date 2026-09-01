@@ -16,6 +16,11 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE: `${API_URL}/users`,
     WAITERS: `${API_URL}/users/waiters`
+  },
+
+  CASH_REGISTERS: {
+    BASE: `${API_URL}/cash-registers`,
+    ACTIVE: `${API_URL}/cash-registers/active`
   }
 
 } as const;

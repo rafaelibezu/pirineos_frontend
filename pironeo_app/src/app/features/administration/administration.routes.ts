@@ -46,6 +46,16 @@ export const ADMINISTRATION_ROUTES: Routes = [
       },
 
       {
+        path: 'users/:id/edit',
+        loadComponent: () =>
+          import(
+            './users/pages/user-form/user-form.page'
+          ).then(
+            m => m.UserFormPage
+          )
+      },
+
+      {
         path: 'users/:id',
         loadComponent: () =>
           import(
@@ -56,12 +66,42 @@ export const ADMINISTRATION_ROUTES: Routes = [
       },
 
       {
-        path: 'users/:id/edit',
+        path: 'cash-registers',
         loadComponent: () =>
           import(
-            './users/pages/user-form/user-form.page'
+            './cash-registers/pages/cash-register-list/cash-register-list.page'
           ).then(
-            m => m.UserFormPage
+            m => m.CashRegisterListPage
+          )
+      },
+
+      {
+        path: 'cash-registers/new',
+        loadComponent: () =>
+          import(
+            './cash-registers/pages/cash-register-form/cash-register-form.page'
+          ).then(
+            m => m.CashRegisterFormPage
+          )
+      },
+
+      {
+        path: 'cash-registers/:id/edit',
+        loadComponent: () =>
+          import(
+            './cash-registers/pages/cash-register-form/cash-register-form.page'
+          ).then(
+            m => m.CashRegisterFormPage
+          )
+      },
+
+      {
+        path: 'cash-registers/:id',
+        loadComponent: () =>
+          import(
+            './cash-registers/pages/cash-register-detail/cash-register-detail.page'
+          ).then(
+            m => m.CashRegisterDetailPage
           )
       }
 

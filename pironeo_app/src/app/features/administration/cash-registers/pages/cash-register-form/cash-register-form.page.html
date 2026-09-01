@@ -1,0 +1,243 @@
+<ion-content [fullscreen]="true">
+
+  <div class="cash-register-form-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          {{ title() }}
+        </h1>
+
+        <p>
+          {{ subtitle() }}
+        </p>
+
+      </div>
+
+      <div class="header-space"></div>
+
+    </header>
+
+    @if (loadingCashRegister()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <span>
+          Cargando caja...
+        </span>
+
+      </div>
+
+    } @else {
+
+      <form
+        class="cash-register-form"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+
+        <section class="form-section">
+
+          <div class="section-title">
+
+            <span class="section-icon">
+              <ion-icon
+                name="wallet-outline"
+              ></ion-icon>
+            </span>
+
+            <div>
+              <strong>
+                Datos de la caja
+              </strong>
+
+              <span>
+                Identificacion y nombre visible
+              </span>
+            </div>
+
+          </div>
+
+          <div class="field">
+
+            <label>
+              Nombre
+            </label>
+
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Ej. Caja principal"
+            />
+
+            @if (
+              form.controls.name.touched &&
+              form.controls.name.invalid
+            ) {
+
+              <small class="field-error">
+                Ingresa el nombre de la caja.
+              </small>
+
+            }
+
+          </div>
+
+          <div class="field">
+
+            <label>
+              Codigo
+            </label>
+
+            <div class="code-field">
+
+              <ion-icon
+                name="key-outline"
+              ></ion-icon>
+
+              <input
+                type="text"
+                formControlName="code"
+                placeholder="Ej. CAJA-01"
+              />
+
+            </div>
+
+            @if (
+              form.controls.code.touched &&
+              form.controls.code.invalid
+            ) {
+
+              <small class="field-error">
+                Ingresa el codigo de la caja.
+              </small>
+
+            }
+
+          </div>
+
+        </section>
+
+        <section class="form-section">
+
+          <div class="section-title">
+
+            <span
+              class="section-icon"
+              [class.danger]="!form.controls.active.value"
+            >
+              <ion-icon
+                [name]="
+                  form.controls.active.value
+                    ? 'checkmark-circle-outline'
+                    : 'close-circle-outline'
+                "
+              ></ion-icon>
+            </span>
+
+            <div>
+              <strong>
+                Estado
+              </strong>
+
+              <span>
+                Disponibilidad de la caja
+              </span>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            class="active-toggle"
+            [class.inactive]="!form.controls.active.value"
+            (click)="toggleActive()"
+          >
+
+            <span class="active-icon">
+
+              <ion-icon
+                [name]="
+                  form.controls.active.value
+                    ? 'checkmark-circle-outline'
+                    : 'close-circle-outline'
+                "
+              ></ion-icon>
+
+            </span>
+
+            <div>
+              <strong>
+                {{
+                  form.controls.active.value
+                    ? 'Caja activa'
+                    : 'Caja inactiva'
+                }}
+              </strong>
+
+              <span>
+                {{
+                  form.controls.active.value
+                    ? 'Disponible para operaciones'
+                    : 'No disponible para operaciones'
+                }}
+              </span>
+            </div>
+
+          </button>
+
+        </section>
+
+        @if (error()) {
+
+          <div class="form-error">
+            {{ error() }}
+          </div>
+
+        }
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="loading()"
+        >
+
+          @if (loading()) {
+
+            <ion-spinner
+              name="crescent"
+            ></ion-spinner>
+
+            Guardando...
+
+          } @else {
+
+            {{ saveLabel() }}
+
+          }
+
+        </button>
+
+      </form>
+
+    }
+
+  </div>
+
+</ion-content>
