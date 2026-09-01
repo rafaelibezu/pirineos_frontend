@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  Component,
+  signal
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +23,6 @@ import {
   lockClosedOutline,
   personOutline
 } from 'ionicons/icons';
-import { finalize } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -42,11 +44,11 @@ export class LoginPage {
 
   loginForm: FormGroup;
 
-  showPassword = false;
+  readonly showPassword = signal(false);
 
-  loading = false;
+  readonly loading = signal(false);
 
-  errorMessage = '';
+  readonly errorMessage = signal('');
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -83,15 +85,16 @@ export class LoginPage {
 
   togglePassword(): void {
 
-    this.showPassword =
-      !this.showPassword;
+    this.showPassword.update(
+      value => !value
+    );
   }
 
   login(): void {
 
     if (
       this.loginForm.invalid
-      || this.loading
+      || this.loading()
     ) {
 
       this.loginForm
@@ -100,9 +103,8 @@ export class LoginPage {
       return;
     }
 
-    this.loading = true;
-
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
 
     const {
       username,
@@ -118,18 +120,11 @@ export class LoginPage {
         },
         rememberMe
       )
-      .pipe(
-
-        finalize(() => {
-
-          this.loading = false;
-
-        })
-
-      )
       .subscribe({
 
         next: response => {
+
+          this.loading.set(false);
 
           const role =
             this.authService.getCurrentSession()?.role
@@ -162,9 +157,15 @@ export class LoginPage {
 
         error: error => {
 
-          this.errorMessage =
+          this.authService.logout();
+
+          this.errorMessage.set(
             error?.error?.message
-            ?? 'Usuario o contraseña incorrectos';
+            ?? error?.message
+            ?? 'Usuario o contrasena incorrectos'
+          );
+
+          this.loading.set(false);
 
         }
 

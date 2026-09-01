@@ -11,6 +11,7 @@ import {
 
 import {
   Observable,
+  map,
   tap
 } from 'rxjs';
 
@@ -88,6 +89,21 @@ export class AuthService {
         request
       )
       .pipe(
+
+        map(response => {
+
+          if (!response.data) {
+
+            throw new Error(
+              response.message
+                ?? 'No se pudo iniciar sesion.'
+            );
+
+          }
+
+          return response;
+
+        }),
 
         tap(response => {
 

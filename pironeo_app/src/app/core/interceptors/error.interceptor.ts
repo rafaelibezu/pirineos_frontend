@@ -12,7 +12,13 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      const isLoginRequest =
+        request.url.includes('/auth/login');
+
+      if (
+        error.status === 401
+        && !isLoginRequest
+      ) {
         storage.remove(STORAGE_KEYS.AUTH_TOKEN);
         void router.navigate(['/auth/login']);
       }

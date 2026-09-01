@@ -277,6 +277,57 @@
 
         </div>
 
+        @if (isEditMode()) {
+
+          <div class="field">
+
+            <label>
+              Estado
+            </label>
+
+            <button
+              type="button"
+              class="active-toggle"
+              [class.inactive]="!active()"
+              (click)="toggleActive()"
+            >
+
+              <span class="active-icon">
+
+                <ion-icon
+                  [name]="
+                    active()
+                      ? 'checkmark-circle-outline'
+                      : 'close-circle-outline'
+                  "
+                ></ion-icon>
+
+              </span>
+
+              <div>
+                <strong>
+                  {{
+                    active()
+                      ? 'Usuario activo'
+                      : 'Usuario inactivo'
+                  }}
+                </strong>
+
+                <span>
+                  {{
+                    active()
+                      ? 'Puede ingresar al sistema'
+                      : 'No puede ingresar al sistema'
+                  }}
+                </span>
+              </div>
+
+            </button>
+
+          </div>
+
+        }
+
       </section>
 
       @if (error()) {

@@ -311,6 +311,79 @@ ion-content {
   font-size: 9px;
 }
 
+.active-toggle {
+  width: 100%;
+  min-height: 66px;
+
+  padding: 11px;
+
+  border:
+    1px solid rgba(49, 202, 91, 0.35);
+
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: left;
+
+  background:
+    rgba(49, 202, 91, 0.08);
+
+  color: #ffffff;
+}
+
+.active-toggle.inactive {
+  border-color:
+    rgba(219, 78, 78, 0.35);
+
+  background:
+    rgba(219, 78, 78, 0.08);
+}
+
+.active-icon {
+  width: 35px;
+  height: 35px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+
+  color: #65df83;
+
+  background:
+    rgba(44, 190, 78, 0.1);
+}
+
+.active-toggle.inactive .active-icon {
+  color: #dd6565;
+
+  background:
+    rgba(219, 78, 78, 0.1);
+}
+
+.active-toggle div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.active-toggle strong {
+  font-size: 12px;
+}
+
+.active-toggle span {
+  color: #747c7f;
+
+  font-size: 10px;
+}
+
 .form-error {
   margin: 14px 0;
 

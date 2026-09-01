@@ -29,6 +29,8 @@ import { addIcons } from 'ionicons';
 
 import {
   arrowBackOutline,
+  checkmarkCircleOutline,
+  closeCircleOutline,
   eyeOffOutline,
   eyeOutline,
   personOutline,
@@ -144,6 +146,8 @@ export class UserFormPage implements OnInit {
 
     addIcons({
       arrowBackOutline,
+      checkmarkCircleOutline,
+      closeCircleOutline,
       eyeOffOutline,
       eyeOutline,
       personOutline,
@@ -174,6 +178,12 @@ export class UserFormPage implements OnInit {
 
   togglePassword(): void {
     this.showPassword.update(
+      value => !value
+    );
+  }
+
+  toggleActive(): void {
+    this.active.update(
       value => !value
     );
   }

@@ -92,7 +92,7 @@
 
             <input
               id="password"
-              [type]="showPassword ? 'text' : 'password'"
+              [type]="showPassword() ? 'text' : 'password'"
               formControlName="password"
               placeholder="Ingresa tu contraseña"
               autocomplete="current-password"
@@ -103,7 +103,7 @@
               class="password-button"
               (click)="togglePassword()"
               [attr.aria-label]="
-                showPassword
+                showPassword()
                   ? 'Ocultar contraseña'
                   : 'Mostrar contraseña'
               "
@@ -111,7 +111,7 @@
 
               <ion-icon
                 [name]="
-                  showPassword
+                  showPassword()
                     ? 'eye-off-outline'
                     : 'eye-outline'
                 "
@@ -148,23 +148,23 @@
 
         <div
           class="server-error"
-          *ngIf="errorMessage"
+          *ngIf="errorMessage()"
         >
-          {{ errorMessage }}
+          {{ errorMessage() }}
         </div>
 
         <button
           type="submit"
           class="login-button"
-          [disabled]="loading"
+          [disabled]="loading()"
         >
 
-          <ng-container *ngIf="!loading">
+          <ng-container *ngIf="!loading()">
             INICIAR SESIÓN
           </ng-container>
 
           <ion-spinner
-            *ngIf="loading"
+            *ngIf="loading()"
             name="crescent"
           ></ion-spinner>
 
