@@ -46,6 +46,16 @@ export const ADMINISTRATION_ROUTES: Routes = [
       },
 
       {
+        path: 'users/:id',
+        loadComponent: () =>
+          import(
+            './users/pages/user-detail/user-detail.page'
+          ).then(
+            m => m.UserDetailPage
+          )
+      },
+
+      {
         path: 'users/:id/edit',
         loadComponent: () =>
           import(

@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 
 import {
   Component,
+  OnInit,
+  computed,
   inject,
   signal
 } from '@angular/core';
@@ -13,6 +15,7 @@ import {
 } from '@angular/forms';
 
 import {
+  ActivatedRoute,
   Router
 } from '@angular/router';
 
@@ -33,6 +36,10 @@ import {
 } from 'ionicons/icons';
 
 import { UserService } from '../../services/user.service';
+import {
+  User,
+  UserRole
+} from '../../models/user.model';
 
 @Component({
   selector: 'app-user-form',
@@ -47,15 +54,47 @@ import { UserService } from '../../services/user.service';
     IonSpinner
   ]
 })
-export class UserFormPage {
+export class UserFormPage implements OnInit {
 
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   readonly loading = signal(false);
+  readonly loadingUser = signal(false);
   readonly error = signal('');
   readonly showPassword = signal(false);
+  readonly editUserId = signal<number | null>(null);
+  readonly active = signal(true);
+
+  readonly isEditMode = computed(() =>
+    this.editUserId() !== null
+  );
+
+  readonly title = computed(() =>
+    this.isEditMode()
+      ? 'Editar usuario'
+      : 'Nuevo usuario'
+  );
+
+  readonly subtitle = computed(() =>
+    this.isEditMode()
+      ? 'Actualiza los datos del usuario'
+      : 'Crea un acceso para el personal'
+  );
+
+  readonly passwordPlaceholder = computed(() =>
+    this.isEditMode()
+      ? 'Dejar vacia para mantener la actual'
+      : 'Contrasena'
+  );
+
+  readonly saveLabel = computed(() =>
+    this.isEditMode()
+      ? 'Actualizar usuario'
+      : 'Guardar usuario'
+  );
 
   readonly form = this.fb.nonNullable.group({
 
@@ -113,6 +152,22 @@ export class UserFormPage {
 
   }
 
+  ngOnInit(): void {
+
+    const id = Number(
+      this.route.snapshot.paramMap.get('id')
+    );
+
+    if (!id) {
+      return;
+    }
+
+    this.editUserId.set(id);
+    this.makePasswordOptional();
+    this.loadUser(id);
+
+  }
+
   selectRole(roleId: number): void {
     this.form.controls.roleId.setValue(roleId);
   }
@@ -136,16 +191,50 @@ export class UserFormPage {
 
     this.loading.set(true);
 
-    this.userService
-      .create(this.form.getRawValue())
+    const id =
+      this.editUserId();
+
+    const rawValue =
+      this.form.getRawValue();
+
+    const request = {
+      username: rawValue.username,
+      firstName: rawValue.firstName,
+      lastName: rawValue.lastName,
+      roleId: rawValue.roleId,
+      active: this.active()
+    };
+
+    const request$ =
+      id
+        ? this.userService.update(
+          id,
+          rawValue.password
+            ? {
+              ...request,
+              password: rawValue.password
+            }
+            : request
+        )
+        : this.userService.create({
+          username: request.username,
+          firstName: request.firstName,
+          lastName: request.lastName,
+          roleId: request.roleId,
+          password: rawValue.password
+        });
+
+    request$
       .subscribe({
 
-        next: () => {
+        next: response => {
 
           this.loading.set(false);
 
           this.router.navigateByUrl(
-            '/administration/users'
+            id
+              ? `/administration/users/${response.data?.id ?? id}`
+              : '/administration/users'
           );
 
         },
@@ -153,13 +242,19 @@ export class UserFormPage {
         error: error => {
 
           console.error(
-            'Error creando usuario',
+            id
+              ? 'Error actualizando usuario'
+              : 'Error creando usuario',
             error
           );
 
           this.error.set(
             error?.error?.message
-              ?? 'No se pudo crear el usuario.'
+              ?? (
+                id
+                  ? 'No se pudo actualizar el usuario.'
+                  : 'No se pudo crear el usuario.'
+              )
           );
 
           this.loading.set(false);
@@ -172,9 +267,92 @@ export class UserFormPage {
 
   goBack(): void {
 
+    const id =
+      this.editUserId();
+
     this.router.navigateByUrl(
-      '/administration/users'
+      id
+        ? `/administration/users/${id}`
+        : '/administration/users'
     );
 
   }
+
+  private loadUser(id: number): void {
+
+    this.loadingUser.set(true);
+    this.error.set('');
+
+    this.userService
+      .getById(id)
+      .subscribe({
+
+        next: response => {
+
+          const user =
+            response.data;
+
+          this.form.patchValue({
+            firstName: user.firstName,
+            lastName: user.lastName ?? '',
+            username: user.username,
+            password: '',
+            roleId: user.roleId
+              ?? this.getRoleId(user)
+          });
+
+          this.active.set(user.active);
+
+          this.loadingUser.set(false);
+
+        },
+
+        error: error => {
+
+          console.error(
+            'Error cargando usuario para editar',
+            error
+          );
+
+          this.error.set(
+            error?.error?.message
+              ?? 'No se pudo cargar el usuario.'
+          );
+
+          this.loadingUser.set(false);
+
+        }
+
+      });
+
+  }
+
+  private makePasswordOptional(): void {
+
+    this.form.controls.password.clearValidators();
+
+    this.form.controls.password.addValidators(
+      Validators.minLength(6)
+    );
+
+    this.form.controls.password.updateValueAndValidity();
+
+  }
+
+  private getRoleId(user: User): number {
+
+    return this.getRole(user) === 'ADMIN'
+      ? 1
+      : 2;
+
+  }
+
+  private getRole(user: User): UserRole {
+
+    return user.roleCode
+      ?? user.role
+      ?? 'WAITER';
+
+  }
+
 }

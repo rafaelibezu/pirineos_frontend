@@ -17,11 +17,11 @@
       <div class="title-area">
 
         <h1>
-          Nuevo usuario
+          {{ title() }}
         </h1>
 
         <p>
-          Crea un acceso para el personal
+          {{ subtitle() }}
         </p>
 
       </div>
@@ -173,7 +173,7 @@
                   : 'password'
               "
               formControlName="password"
-              placeholder="Contraseña"
+              [placeholder]="passwordPlaceholder()"
               autocomplete="new-password"
             />
 
@@ -290,7 +290,7 @@
       <button
         type="submit"
         class="save-button"
-        [disabled]="loading()"
+        [disabled]="loading() || loadingUser()"
       >
 
         @if (loading()) {
@@ -303,7 +303,7 @@
 
         } @else {
 
-          Guardar usuario
+          {{ saveLabel() }}
 
         }
 

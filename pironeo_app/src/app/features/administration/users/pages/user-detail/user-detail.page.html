@@ -1,0 +1,271 @@
+<ion-content [fullscreen]="true">
+
+  <div class="user-detail-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Detalle de usuario
+        </h1>
+
+        <p>
+          Informacion y permisos
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="edit-top-button"
+        (click)="edit()"
+        [disabled]="!user()"
+      >
+
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <span>
+          Cargando usuario...
+        </span>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <p>
+          {{ error() }}
+        </p>
+
+      </div>
+
+    } @else if (user(); as currentUser) {
+
+      <section class="profile-card">
+
+        <div
+          class="avatar"
+          [class.admin]="
+            getRole(currentUser) === 'ADMIN'
+          "
+        >
+
+          {{
+            currentUser.firstName
+              ? currentUser.firstName
+                  .charAt(0)
+                  .toUpperCase()
+              : currentUser.username
+                  .charAt(0)
+                  .toUpperCase()
+          }}
+
+        </div>
+
+        <h2>
+
+          {{ currentUser.firstName }}
+
+          @if (currentUser.lastName) {
+            {{ currentUser.lastName }}
+          }
+
+        </h2>
+
+        <span class="username">
+          @{{ currentUser.username }}
+        </span>
+
+        <div
+          class="status-badge"
+          [class.inactive]="
+            !currentUser.active
+          "
+        >
+
+          <ion-icon
+            [name]="
+              currentUser.active
+                ? 'checkmark-circle-outline'
+                : 'close-circle-outline'
+            "
+          ></ion-icon>
+
+          {{
+            currentUser.active
+              ? 'Usuario activo'
+              : 'Usuario inactivo'
+          }}
+
+        </div>
+
+      </section>
+
+      <section class="information-card">
+
+        <h3>
+          Informacion del usuario
+        </h3>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+
+            <ion-icon
+              name="person-outline"
+            ></ion-icon>
+
+          </span>
+
+          <div>
+
+            <span class="label">
+              Nombre completo
+            </span>
+
+            <strong>
+
+              {{ currentUser.firstName }}
+
+              {{ currentUser.lastName }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+
+            <ion-icon
+              name="at-outline"
+            ></ion-icon>
+
+          </span>
+
+          <div>
+
+            <span class="label">
+              Usuario
+            </span>
+
+            <strong>
+              {{ currentUser.username }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span
+            class="row-icon"
+            [class.gold]="
+              getRole(currentUser) === 'ADMIN'
+            "
+          >
+
+            <ion-icon
+              [name]="
+                getRole(currentUser) === 'ADMIN'
+                  ? 'shield-checkmark-outline'
+                  : 'person-outline'
+              "
+            ></ion-icon>
+
+          </span>
+
+          <div>
+
+            <span class="label">
+              Rol
+            </span>
+
+            <strong>
+              {{ getRoleName(currentUser) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+
+            <ion-icon
+              name="key-outline"
+            ></ion-icon>
+
+          </span>
+
+          <div>
+
+            <span class="label">
+              Acceso
+            </span>
+
+            <strong>
+
+              {{
+                currentUser.active
+                  ? 'Permitido'
+                  : 'Bloqueado'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="edit-button"
+        (click)="edit()"
+      >
+
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+
+        Editar usuario
+
+      </button>
+
+    }
+
+  </div>
+
+</ion-content>

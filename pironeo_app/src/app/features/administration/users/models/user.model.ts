@@ -7,7 +7,10 @@ export interface User {
   firstName: string;
   lastName?: string;
 
-  role: UserRole;
+  role?: UserRole;
+  roleId?: number;
+  roleCode?: UserRole;
+  roleName?: string;
 
   active: boolean;
 }

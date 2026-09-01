@@ -34,7 +34,10 @@ import {
 } from 'ionicons/icons';
 
 import { UserService } from '../../services/user.service';
-import { User } from '../../models/user.model';
+import {
+  User,
+  UserRole
+} from '../../models/user.model';
 
 @Component({
   selector: 'app-user-list',
@@ -96,8 +99,9 @@ export class UserListPage implements OnInit {
           [
             user.username,
             fullName,
-            user.role,
-            user.role === 'ADMIN' ? 'administrador admin' : 'camarero waiter',
+            this.getRoleName(user),
+            this.getRole(user),
+            this.getRole(user) === 'ADMIN' ? 'administrador admin' : 'camarero waiter',
             user.active ? 'activo' : 'inactivo'
           ].join(' ')
         );
@@ -200,15 +204,31 @@ export class UserListPage implements OnInit {
     );
   }
 
-  editUser(user: User): void {
+  viewUser(user: User): void {
 
     this.router.navigate(
       [
         '/administration/users',
-        user.id,
-        'edit'
+        user.id
       ]
     );
+  }
+
+  getRole(user: User): UserRole {
+
+    return user.roleCode
+      ?? user.role
+      ?? 'WAITER';
+  }
+
+  getRoleName(user: User): string {
+
+    return user.roleName
+      ?? (
+        this.getRole(user) === 'ADMIN'
+          ? 'Administrador'
+          : 'Camarero'
+      );
   }
 
   goBack(): void {

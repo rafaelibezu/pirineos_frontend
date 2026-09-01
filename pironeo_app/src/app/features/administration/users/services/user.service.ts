@@ -6,7 +6,10 @@ import { API_ENDPOINTS } from '../../../../core/constants/api.constants';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 
 import { User } from '../models/user.model';
-import { CreateUserRequest } from '../models/create-user-request.model';
+import {
+  CreateUserRequest,
+  UpdateUserRequest
+} from '../models/create-user-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +42,17 @@ export class UserService {
 
     return this.http.post<ApiResponse<User>>(
       API_ENDPOINTS.USERS.BASE,
+      request
+    );
+  }
+
+  update(
+    id: number,
+    request: UpdateUserRequest
+  ): Observable<ApiResponse<User>> {
+
+    return this.http.put<ApiResponse<User>>(
+      `${API_ENDPOINTS.USERS.BASE}/${id}`,
       request
     );
   }

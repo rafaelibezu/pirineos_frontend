@@ -125,13 +125,13 @@
           <button
             type="button"
             class="user-card"
-            (click)="editUser(user)"
+            (click)="viewUser(user)"
           >
 
             <div
               class="avatar"
               [class.admin]="
-                user.role === 'ADMIN'
+                getRole(user) === 'ADMIN'
               "
             >
 
@@ -177,23 +177,19 @@
               <div
                 class="role"
                 [class.admin]="
-                  user.role === 'ADMIN'
+                  getRole(user) === 'ADMIN'
                 "
               >
 
                 <ion-icon
                   [name]="
-                    user.role === 'ADMIN'
+                    getRole(user) === 'ADMIN'
                       ? 'shield-checkmark-outline'
                       : 'person-outline'
                   "
                 ></ion-icon>
 
-                {{
-                  user.role === 'ADMIN'
-                    ? 'Administrador'
-                    : 'Camarero'
-                }}
+                {{ getRoleName(user) }}
 
               </div>
 
