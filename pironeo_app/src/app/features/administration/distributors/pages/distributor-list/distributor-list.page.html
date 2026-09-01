@@ -1,0 +1,230 @@
+<ion-content [fullscreen]="true">
+
+  <div class="distributor-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Distribuidores
+        </h1>
+
+        <p>
+          Gestiona los distribuidores
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="createDistributor()"
+      >
+
+        <ion-icon
+          name="add-outline"
+        ></ion-icon>
+
+      </button>
+
+    </header>
+
+    <section class="search-section">
+
+      <div class="search-box">
+
+        <ion-icon
+          name="search-outline"
+        ></ion-icon>
+
+        <input
+          type="search"
+          placeholder="Buscar distribuidor..."
+          [value]="search()"
+          (input)="onSearch($event)"
+        />
+
+      </div>
+
+    </section>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <p>
+          Cargando distribuidores...
+        </p>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <ion-icon
+          name="warning-outline"
+        ></ion-icon>
+
+        <p>
+          {{ error() }}
+        </p>
+
+        <button
+          type="button"
+          class="retry-button"
+          (click)="loadDistributors()"
+        >
+
+          <ion-icon
+            name="refresh-outline"
+          ></ion-icon>
+
+          Reintentar
+
+        </button>
+
+      </div>
+
+    } @else {
+
+      <section class="summary">
+
+        <span>
+
+          {{ filteredDistributors().length }}
+
+          {{
+            filteredDistributors().length === 1
+              ? 'distribuidor'
+              : 'distribuidores'
+          }}
+
+        </span>
+
+      </section>
+
+      <section class="distributor-list">
+
+        @for (
+          distributor of filteredDistributors();
+          track distributor.id
+        ) {
+
+          <button
+            type="button"
+            class="distributor-card"
+            (click)="viewDistributor(distributor)"
+          >
+
+            <div class="distributor-icon">
+
+              <ion-icon
+                name="cube-outline"
+              ></ion-icon>
+
+            </div>
+
+            <div class="distributor-info">
+
+              <div class="name-row">
+
+                <strong>
+                  {{ distributor.name }}
+                </strong>
+
+                <span
+                  class="status"
+                  [class.inactive]="
+                    !distributor.active
+                  "
+                >
+
+                  {{
+                    distributor.active
+                      ? 'Activo'
+                      : 'Inactivo'
+                  }}
+
+                </span>
+
+              </div>
+
+              <span class="description">
+
+                {{
+                  distributor.description
+                    || 'Proveedor del negocio'
+                }}
+
+              </span>
+
+            </div>
+
+            <ion-icon
+              class="arrow"
+              name="chevron-forward-outline"
+            ></ion-icon>
+
+          </button>
+
+        } @empty {
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+
+              <ion-icon
+                name="business-outline"
+              ></ion-icon>
+
+            </div>
+
+            <h2>
+              No hay distribuidores
+            </h2>
+
+            <p>
+              No encontramos distribuidores registrados.
+            </p>
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+    <button
+      type="button"
+      class="floating-button"
+      (click)="createDistributor()"
+    >
+
+      <ion-icon
+        name="add-outline"
+      ></ion-icon>
+
+      Nuevo distribuidor
+
+    </button>
+
+  </div>
+
+</ion-content>

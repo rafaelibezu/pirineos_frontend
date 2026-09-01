@@ -1,0 +1,217 @@
+<ion-content [fullscreen]="true">
+
+  <div class="distributor-detail-page">
+
+    <header class="top-bar">
+
+      <button
+        type="button"
+        class="icon-button"
+        (click)="goBack()"
+      >
+        <ion-icon
+          name="arrow-back-outline"
+        ></ion-icon>
+      </button>
+
+      <div class="title-area">
+
+        <h1>
+          Detalle de distribuidor
+        </h1>
+
+        <p>
+          Informacion y estado
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="edit-top-button"
+        (click)="edit()"
+        [disabled]="!distributor()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+      </button>
+
+    </header>
+
+    @if (loading()) {
+
+      <div class="state-container">
+
+        <ion-spinner
+          name="crescent"
+        ></ion-spinner>
+
+        <span>
+          Cargando distribuidor...
+        </span>
+
+      </div>
+
+    } @else if (error()) {
+
+      <div class="state-container error">
+
+        <p>
+          {{ error() }}
+        </p>
+
+      </div>
+
+    } @else if (distributor(); as currentDistributor) {
+
+      <section class="profile-card">
+
+        <div
+          class="distributor-icon"
+          [class.inactive]="!currentDistributor.active"
+        >
+          <ion-icon
+            name="cube-outline"
+          ></ion-icon>
+        </div>
+
+        <h2>
+          {{ currentDistributor.name }}
+        </h2>
+
+        <span class="description">
+          {{
+            currentDistributor.description
+              || 'Proveedor del negocio'
+          }}
+        </span>
+
+        <div
+          class="status-badge"
+          [class.inactive]="!currentDistributor.active"
+        >
+
+          <ion-icon
+            [name]="
+              currentDistributor.active
+                ? 'checkmark-circle-outline'
+                : 'close-circle-outline'
+            "
+          ></ion-icon>
+
+          {{
+            currentDistributor.active
+              ? 'Distribuidor activo'
+              : 'Distribuidor inactivo'
+          }}
+
+        </div>
+
+      </section>
+
+      <section class="information-card">
+
+        <h3>
+          Informacion del distribuidor
+        </h3>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="business-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Nombre
+            </span>
+
+            <strong>
+              {{ currentDistributor.name }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span class="row-icon">
+            <ion-icon
+              name="document-text-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Descripcion
+            </span>
+
+            <strong>
+              {{
+                currentDistributor.description
+                  || 'Sin descripcion'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div class="information-row">
+
+          <span
+            class="row-icon"
+            [class.danger]="!currentDistributor.active"
+          >
+            <ion-icon
+              [name]="
+                currentDistributor.active
+                  ? 'checkmark-circle-outline'
+                  : 'close-circle-outline'
+              "
+            ></ion-icon>
+          </span>
+
+          <div>
+
+            <span class="label">
+              Estado
+            </span>
+
+            <strong>
+              {{
+                currentDistributor.active
+                  ? 'Disponible'
+                  : 'Bloqueado'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="edit-button"
+        (click)="edit()"
+      >
+        <ion-icon
+          name="create-outline"
+        ></ion-icon>
+
+        Editar distribuidor
+      </button>
+
+    }
+
+  </div>
+
+</ion-content>

@@ -26,6 +26,11 @@ export const API_ENDPOINTS = {
   SHIFTS: {
     BASE: `${API_URL}/shifts`,
     ACTIVE: `${API_URL}/shifts/active`
+  },
+
+  DISTRIBUTORS: {
+    BASE: `${API_URL}/distributors`,
+    ACTIVE: `${API_URL}/distributors/active`
   }
 
 } as const;

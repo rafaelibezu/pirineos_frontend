@@ -143,6 +143,46 @@ export const ADMINISTRATION_ROUTES: Routes = [
           ).then(
             m => m.ShiftDetailPage
           )
+      },
+
+      {
+        path: 'distributors',
+        loadComponent: () =>
+          import(
+            './distributors/pages/distributor-list/distributor-list.page'
+          ).then(
+            m => m.DistributorListPage
+          )
+      },
+
+      {
+        path: 'distributors/new',
+        loadComponent: () =>
+          import(
+            './distributors/pages/distributor-form/distributor-form.page'
+          ).then(
+            m => m.DistributorFormPage
+          )
+      },
+
+      {
+        path: 'distributors/:id/edit',
+        loadComponent: () =>
+          import(
+            './distributors/pages/distributor-form/distributor-form.page'
+          ).then(
+            m => m.DistributorFormPage
+          )
+      },
+
+      {
+        path: 'distributors/:id',
+        loadComponent: () =>
+          import(
+            './distributors/pages/distributor-detail/distributor-detail.page'
+          ).then(
+            m => m.DistributorDetailPage
+          )
       }
 
     ]
